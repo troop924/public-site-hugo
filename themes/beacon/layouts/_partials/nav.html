@@ -1,0 +1,20 @@
+<nav class="topnav" aria-label="Main">
+  <a class="brand" href="{{ "/" | relURL }}">
+    <span class="brand-name">Troop 924</span>
+    <span class="brand-place">Evanston</span>
+  </a>
+  {{- $cur := . }}
+  <ul class="menu menu-desktop">
+    {{- range site.Menus.main }}
+    <li><a href="{{ .URL }}"{{ if or ($cur.IsMenuCurrent "main" .) ($cur.HasMenuCurrent "main" .) }} aria-current="page"{{ end }}>{{ .Name }}</a></li>
+    {{- end }}
+  </ul>
+  <details class="menu-mobile">
+    <summary>Menu</summary>
+    <ul>
+      {{- range site.Menus.main }}
+      <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+      {{- end }}
+    </ul>
+  </details>
+</nav>

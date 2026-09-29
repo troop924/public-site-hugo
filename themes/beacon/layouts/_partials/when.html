@@ -1,0 +1,8 @@
+{{- /* Human date range, e.g. "Fri, Oct 16 – Sun, Oct 18" or "Tue, Nov 10 · 7:00 PM". */ -}}
+{{- $start := .Date -}}
+{{- $end := (.Params.endDate | default .Date) | time -}}
+{{- if ne ($start.Format "2006-01-02") ($end.Format "2006-01-02") -}}
+{{ $start.Format "Mon, Jan 2" }} – {{ $end.Format "Mon, Jan 2" }}
+{{- else -}}
+{{ $start.Format "Mon, Jan 2" }}{{ if ne ($start.Format "15:04") "00:00" }} · {{ $start.Format "3:04 PM" }}{{ end }}
+{{- end -}}

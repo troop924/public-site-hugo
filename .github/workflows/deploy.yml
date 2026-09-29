@@ -1,0 +1,77 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:          # build-only check so broken content can't be merged
+  schedule:
+    - cron: "15 10 * * *" # daily ~5 AM Chicago: rolls finished events from "What's next" to trip reports
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write        # for AWS OIDC; no long-lived keys stored in GitHub
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  HUGO_VERSION: 0.150.0
+  TZ: America/Chicago
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Hugo
+        run: |
+          curl -sSL -o hugo.deb "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i hugo.deb
+
+      - name: Build
+        run: hugo --gc --minify --environment production
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: public
+          retention-days: 7
+
+  deploy:
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: public
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+
+      # Fingerprinted CSS and resized images never change under the same name: cache them for a year.
+      - name: Upload long-lived assets
+        run: |
+          aws s3 sync public/ "s3://${{ vars.S3_BUCKET }}/" \
+            --exclude "*" --include "css/*" --include "*.webp" --include "*.jpg" --include "*.png" \
+            --cache-control "public, max-age=31536000, immutable"
+
+      # Everything else (HTML, PDFs, redirects): short cache, and remove files no longer in the site.
+      - name: Upload pages and remove stale files
+        run: |
+          aws s3 sync public/ "s3://${{ vars.S3_BUCKET }}/" \
+            --exclude "css/*" --exclude "*.webp" --exclude "*.jpg" --exclude "*.png" \
+            --cache-control "public, max-age=300" --delete
+
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --paths "/*"

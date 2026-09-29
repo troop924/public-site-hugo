@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="{{ site.Language.LanguageCode | default "en" }}">
+<head>
+{{ partial "head.html" . }}
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+{{ block "header" . }}
+<header class="masthead">
+  {{ partial "bands.html" (dict "h" 300) }}
+  <div class="wrap masthead-inner">
+    {{ partial "nav.html" . }}
+    <div class="page-head">
+      {{ block "headbefore" . }}{{ end }}
+      <h1>{{ .Title }}</h1>
+      {{ block "headafter" . }}{{ with .Description }}<p class="meta">{{ . }}</p>{{ end }}{{ end }}
+    </div>
+  </div>
+</header>
+{{ end }}
+<main id="main">
+{{ block "main" . }}{{ end }}
+</main>
+{{ partial "footer.html" . }}
+</body>
+</html>

@@ -1,0 +1,61 @@
+baseURL = "https://troop924.org/"
+languageCode = "en-us"
+title = "Troop 924 · Evanston"
+theme = "beacon"
+timeZone = "America/Chicago"
+
+# Events are dated in the future on purpose; Hugo skips future-dated pages
+# unless this is on. Past/upcoming is decided at build time, so the deploy
+# workflow also rebuilds once a day.
+buildFuture = true
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term"]
+
+[markup.goldmark.renderer]
+  unsafe = true   # lets imported legacy HTML pass through until it's cleaned up
+
+[params]
+  tagline = "Scouting in Evanston since 1926"
+  description = "Troop 924 is a Scout-led troop for boys and girls ages 11–17, meeting Tuesday nights at Northminster Presbyterian Church in Evanston, Illinois."
+  email = "scoutmaster@troop924.org"
+  # The troop's existing Google Calendar stays the master calendar.
+  googleCalendar = "r5eoa80otpba34kdfni1o23qfk@group.calendar.google.com"
+  charteredBy = "Chartered by Northminster Presbyterian Church · Scouting America"
+
+  [params.meeting]
+    day = "Tuesdays"
+    time = "7:30–9:00 PM"
+    season = "during the school year"
+    place = "Northminster Presbyterian Church"
+    address = "2515 Central Park Ave, Evanston"
+    mapUrl = "https://www.google.com/maps/search/?api=1&query=2515+Central+Park+Ave+Evanston+IL"
+
+  [params.social]
+    facebook = ""
+    instagram = ""
+
+[menus]
+  [[menus.main]]
+    name = "Events"
+    pageRef = "/events"
+    weight = 10
+  [[menus.main]]
+    name = "Join"
+    pageRef = "/join"
+    weight = 20
+  [[menus.main]]
+    name = "For families"
+    pageRef = "/families"
+    weight = 30
+  [[menus.main]]
+    name = "Service"
+    pageRef = "/service"
+    weight = 40
+  [[menus.main]]
+    name = "Forms"
+    pageRef = "/forms"
+    weight = 50
+  [[menus.main]]
+    name = "About"
+    pageRef = "/about"
+    weight = 60

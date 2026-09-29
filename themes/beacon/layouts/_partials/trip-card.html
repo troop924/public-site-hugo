@@ -1,0 +1,15 @@
+<li>
+<article class="trip-card">
+  {{- with partial "cover.html" . }}
+  {{- $t := .Fill "800x600 Center webp q75" }}
+  <div class="photo"><img src="{{ $t.RelPermalink }}" width="{{ $t.Width }}" height="{{ $t.Height }}" alt="" loading="lazy"></div>
+  {{- else }}
+  <div class="photo none"><img src="{{ "images/scouts-bsa-white.png" | relURL }}" alt=""></div>
+  {{- end }}
+  <div class="body">
+    <p class="kicker">{{ with .Params.category }}{{ . }} · {{ end }}{{ .Date.Format "January 2006" }}</p>
+    <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+    <p>{{ with .Description }}{{ . }}{{ else }}{{ .Summary | plainify | truncate 140 }}{{ end }}</p>
+  </div>
+</article>
+</li>

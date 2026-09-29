@@ -1,0 +1,40 @@
+{{ define "main" }}
+{{- $ev := partial "events.html" . }}
+{{- $cal := partial "gcal.html" . }}
+<div class="wrap">
+  <section class="section" id="upcoming" aria-labelledby="up-h">
+    <div class="section-head">
+      <div><p class="eyebrow">Upcoming</p><h2 id="up-h">What's next</h2></div>
+      <a href="#calendar">Full troop calendar ↓</a>
+    </div>
+    <ul class="event-list">
+      {{- range $ev.upcoming }}{{ partial "event-row.html" . }}{{ end }}
+      {{ partial "meeting-row.html" . }}
+    </ul>
+  </section>
+
+  <section class="section" id="calendar" aria-labelledby="cal-h">
+    <div class="section-head">
+      <div><p class="eyebrow">Calendar</p><h2 id="cal-h">Everything on the calendar</h2></div>
+      <div class="btn-row">
+        <a class="btn btn-ghost" href="{{ $cal.google }}">Add to Google Calendar</a>
+        <a class="btn btn-ghost" href="{{ $cal.webcal }}">Subscribe (Apple, Outlook)</a>
+      </div>
+    </div>
+    <div class="calendar-embed">
+      <iframe src="{{ $cal.embed }}" title="Troop 924 calendar" loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <section class="section" id="past" aria-labelledby="past-h">
+    <div class="section-head"><div><p class="eyebrow">Trip reports</p><h2 id="past-h">Where we've been</h2></div></div>
+    {{- with $ev.past }}
+    <ul class="card-grid">
+      {{- range . }}{{ partial "trip-card.html" . }}{{ end }}
+    </ul>
+    {{- else }}
+    <p class="empty">Trip reports and photos will show up here after each outing.</p>
+    {{- end }}
+  </section>
+</div>
+{{ end }}

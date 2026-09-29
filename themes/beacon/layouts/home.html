@@ -1,0 +1,91 @@
+{{ define "header" }}
+<header class="masthead">
+  {{ partial "bands.html" (dict "h" 640) }}
+  <img class="hero-logo" src="{{ "images/scouts-bsa-white.png" | relURL }}" alt="Scouts BSA" width="170" height="251">
+  <div class="wrap masthead-inner">
+    {{ partial "nav.html" . }}
+    <div class="hero">
+      <p class="eyebrow">{{ site.Params.tagline }}</p>
+      <h1>{{ .Params.headline | default .Title }}</h1>
+      <p class="lede">{{ .Params.lede | default site.Params.description }}</p>
+      <div class="btn-row">
+        <a class="btn btn-gold" href="#join">Visit a meeting</a>
+        <a class="btn btn-on-dark" href="#upcoming">See what's coming up</a>
+      </div>
+    </div>
+  </div>
+</header>
+{{ end }}
+
+{{ define "main" }}
+{{- $ev := partial "events.html" . }}
+<div class="wrap">
+  <section class="section" id="upcoming" aria-labelledby="up-h">
+    <div class="section-head">
+      <div><p class="eyebrow">Upcoming</p><h2 id="up-h">What's next</h2></div>
+      <a href="{{ "events/" | relURL }}">Full calendar →</a>
+    </div>
+    {{- with first (.Params.upcomingCount | default 4) $ev.upcoming }}
+    <ul class="event-list">
+      {{- range . }}{{ partial "event-row.html" . }}{{ end }}
+      {{ partial "meeting-row.html" $ }}
+    </ul>
+    {{- else }}
+    <ul class="event-list">{{ partial "meeting-row.html" . }}</ul>
+    {{- end }}
+  </section>
+
+  {{- $reports := where $ev.past "Content" "!=" "" }}
+  {{- with first 3 $reports }}
+  <section class="section" id="past" aria-labelledby="past-h">
+    <div class="section-head">
+      <div><p class="eyebrow">Trip reports</p><h2 id="past-h">Where we've been</h2></div>
+      <a href="{{ "events/#past" | relURL }}">All trip reports →</a>
+    </div>
+    <ul class="card-grid">
+      {{- range . }}{{ partial "trip-card.html" . }}{{ end }}
+    </ul>
+  </section>
+  {{- end }}
+
+
+  {{- with .Params.program }}
+  <section class="section" id="program" aria-labelledby="prog-h">
+    <div class="section-head">
+      <div><p class="eyebrow">What we do</p><h2 id="prog-h">The Troop 924 program</h2></div>
+      {{ with site.GetPage "/about" }}<a href="{{ .RelPermalink }}">About the troop →</a>{{ end }}
+    </div>
+    <ul class="card-grid card-grid-4">
+      {{- range . }}
+      {{- $p := . }}
+      <li>
+      <article class="trip-card">
+        {{- with resources.Get .image }}
+        {{- $t := cond (eq .MediaType.SubType "png") (.Fit "600x450 webp") (.Fill "600x450 Center webp q78") }}
+        <div class="photo{{ if $p.contain }} contain{{ end }}"><img src="{{ $t.RelPermalink }}" width="{{ $t.Width }}" height="{{ $t.Height }}" alt="" loading="lazy"></div>
+        {{- end }}
+        <div class="body">
+          <h3>{{ .title }}</h3>
+          <p>{{ .text }}</p>
+        </div>
+      </article>
+      </li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end }}
+
+  <section class="join" id="join" aria-labelledby="join-h">
+    <div>
+      <h2 id="join-h">Thinking about joining?</h2>
+      {{ .Content }}
+      <div class="btn-row">
+        {{ with site.GetPage "/families" }}<a class="btn btn-field" href="{{ .RelPermalink }}">New family guide</a>{{ end }}
+        <a class="btn btn-ghost" href="mailto:{{ site.Params.email }}">Contact the troop</a>
+      </div>
+    </div>
+    {{ partial "meeting-facts.html" . }}
+  </section>
+</div>
+
+{{ end }}

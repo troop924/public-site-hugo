@@ -1,0 +1,5 @@
+{{- /* Returns the page's cover image resource (front matter `cover`, else first image in the bundle), or nothing. */ -}}
+{{- $img := false -}}
+{{- with .Params.cover }}{{ $img = $.Resources.GetMatch . }}{{ end -}}
+{{- if not $img }}{{ range first 1 (.Resources.ByType "image") }}{{ $img = . }}{{ end }}{{ end -}}
+{{- return $img -}}

@@ -1,0 +1,9 @@
+{{- /* Links for the troop's Google Calendar. Returns dict with embed, ics, webcal URLs. */ -}}
+{{- $id := site.Params.googleCalendar -}}
+{{- $ics := printf "https://calendar.google.com/calendar/ical/%s/public/basic.ics" (replace $id "@" "%40") -}}
+{{- return dict
+  "embed" (printf "https://calendar.google.com/calendar/embed?src=%s&mode=AGENDA&ctz=America%%2FChicago&showTitle=0&showPrint=0&showCalendars=0" (replace $id "@" "%40"))
+  "ics" $ics
+  "webcal" (replace $ics "https://" "webcal://")
+  "google" (printf "https://calendar.google.com/calendar/u/0/r?cid=%s" $id)
+-}}

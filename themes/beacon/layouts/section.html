@@ -1,0 +1,10 @@
+{{ define "main" }}
+<div class="wrap page-body">
+  {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+  {{ with .Pages }}
+  <ul class="card-grid" style="margin-top: 40px">
+    {{ range . }}{{ partial "trip-card.html" . }}{{ end }}
+  </ul>
+  {{ end }}
+</div>
+{{ end }}

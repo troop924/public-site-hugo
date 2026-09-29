@@ -1,0 +1,10 @@
+{{- /* Splits event pages into upcoming (ending today or later, soonest first) and past (most recent first).
+     "Now" is build time — the deploy workflow rebuilds daily so this stays current. */ -}}
+{{- $up := slice -}}
+{{- $past := slice -}}
+{{- $today := now.Format "2006-01-02" -}}
+{{- range (where site.RegularPages "Section" "events").ByDate -}}
+  {{- $end := (.Params.endDate | default .Date) | time -}}
+  {{- if ge ($end.Format "2006-01-02") $today }}{{ $up = $up | append . }}{{ else }}{{ $past = $past | append . }}{{ end -}}
+{{- end -}}
+{{- return dict "upcoming" $up "past" ($past | collections.Reverse) -}}

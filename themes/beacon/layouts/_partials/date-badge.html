@@ -1,0 +1,10 @@
+{{- $start := .Date -}}
+{{- $end := (.Params.endDate | default .Date) | time -}}
+<div class="date-badge" aria-hidden="true">
+  {{- if .Params.recurring }}
+  <span class="mon">Every</span><span class="day">{{ .Params.recurring }}</span>
+  {{- else }}
+  <span class="mon">{{ $start.Format "Jan" }}</span>
+  <span class="day">{{ $start.Day }}{{ if ne ($start.Format "2006-01-02") ($end.Format "2006-01-02") }}–{{ if ne $start.Month $end.Month }}{{ $end.Format "Jan" }} {{ end }}{{ $end.Day }}{{ end }}</span>
+  {{- end }}
+</div>

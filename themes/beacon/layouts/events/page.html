@@ -1,0 +1,64 @@
+{{ define "headbefore" }}<a class="back" href="{{ "events/" | relURL }}">← All events</a>{{ end }}
+{{ define "headafter" }}
+<p class="meta">
+  <span>{{ partial "when.html" . }}</span>
+  {{ with .Params.location }}<span>{{ . }}</span>{{ end }}
+  {{ with .Params.cost }}<span>{{ . }}</span>{{ end }}
+</p>
+{{ end }}
+{{ define "main" }}
+{{- $end := (.Params.endDate | default .Date) | time -}}
+{{- $isPast := lt ($end.Format "2006-01-02") (now.Format "2006-01-02") -}}
+<div class="wrap event-layout">
+  <div class="stack">
+    {{- if $isPast }}
+      <section aria-labelledby="report-h">
+        <h2 id="report-h">How it went</h2>
+        {{ with .Params.author }}<p class="byline">Written by {{ . }}</p>{{ end }}
+        <div class="prose">{{ with .Content }}{{ . }}{{ else }}<p>No trip report yet.</p>{{ end }}</div>
+      </section>
+      {{ partial "gallery.html" . }}
+    {{- else }}
+      {{- with .Params.actions }}
+      <section id="before-you-go" aria-labelledby="todo-h">
+        <h2 id="todo-h">Before you go</h2>
+        <ol class="steps">
+          {{- range . }}
+          {{- $a := . }}
+          <li class="step{{ if eq .kind "volunteer" }} extra{{ end }}">
+            <div><strong>{{ .label }}</strong><span>{{ with .due }}Due {{ (time .).Format "Mon, Jan 2" }}. {{ end }}{{ .note }}</span></div>
+            {{- with .url }}
+            {{- $text := dict "rsvp" "RSVP" "form" "Get the form" "pay" "Pay" "volunteer" "Volunteer" }}
+            <a class="btn {{ if eq $a.kind "rsvp" }}btn-primary{{ else }}btn-ghost{{ end }}" href="{{ . }}">{{ index $text ($a.kind | default "form") | default "Open" }}</a>
+            {{- end }}
+          </li>
+          {{- end }}
+        </ol>
+      </section>
+      {{- end }}
+      {{ with .Content }}<section aria-labelledby="about-h"><h2 id="about-h">About this trip</h2><div class="prose">{{ . }}</div></section>{{ end }}
+    {{- end }}
+  </div>
+  <aside class="stack">
+    <section class="panel" aria-labelledby="details-h">
+      <h2 id="details-h">The details</h2>
+      <dl class="facts">
+        <dt>When</dt><dd>{{ partial "when.html" . }}</dd>
+        {{ with .Params.depart }}<dt>Leave</dt><dd>{{ . }}</dd>{{ end }}
+        {{ with .Params.return }}<dt>Return</dt><dd>{{ . }}</dd>{{ end }}
+        {{ with .Params.location }}<dt>Where</dt><dd>{{ with $.Params.mapUrl }}<a href="{{ . }}">{{ end }}{{ . }}{{ with $.Params.mapUrl }}</a>{{ end }}</dd>{{ end }}
+        {{ with .Params.cost }}<dt>Cost</dt><dd>{{ . }}</dd>{{ end }}
+        {{ with .Params.uniform }}<dt>Uniform</dt><dd>{{ . }}</dd>{{ end }}
+        {{ with .Params.contact }}<dt>Contact</dt><dd>{{ . }}</dd>{{ end }}
+      </dl>
+    </section>
+    {{- with .Params.packing }}
+    <section class="panel" aria-labelledby="pack-h">
+      <h2 id="pack-h">What to bring</h2>
+      <p>{{ . | markdownify }}</p>
+      <a href="/PersonalCampingChecklist.pdf">Personal Camping Checklist (PDF)</a>
+    </section>
+    {{- end }}
+  </aside>
+</div>
+{{ end }}

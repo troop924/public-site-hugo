@@ -1,0 +1,22 @@
+<li class="event-row">
+  {{ partial "date-badge.html" . }}
+  <div class="event-body">
+    <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+    <p><span class="visually-hidden">{{ partial "when.html" . }} · </span>{{ delimit (slice .Params.location .Params.cost | complement (slice nil "")) " · " }}</p>
+    {{- with .Params.actions }}
+    <div class="tags">
+      {{- range . }}
+        {{- if .due }}<span class="tag tag-due">{{ .label }} by {{ (time .due).Format "Jan 2" }}</span>
+        {{- else if eq .kind "form" }}<span class="tag tag-form">{{ .label }} required</span>
+        {{- else if eq .kind "volunteer" }}<span class="tag tag-open">{{ .label }}</span>{{ end }}
+      {{- end }}
+    </div>
+    {{- end }}
+  </div>
+  <div class="event-actions">
+    {{- range first 1 (where (.Params.actions | default slice) "kind" "rsvp") }}
+    <a class="btn btn-primary" href="{{ $.RelPermalink }}#before-you-go">{{ .label | default "RSVP" }}<span class="visually-hidden"> for {{ $.Title }}</span></a>
+    {{- end }}
+    <a class="btn btn-ghost" href="{{ .RelPermalink }}">Details<span class="visually-hidden"> for {{ .Title }}</span></a>
+  </div>
+</li>

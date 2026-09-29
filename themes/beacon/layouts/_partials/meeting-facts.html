@@ -1,0 +1,8 @@
+{{- with site.Params.meeting }}
+<dl class="facts">
+  <dt>When</dt><dd>{{ .day }}, {{ .time }} {{ .season }}</dd>
+  <dt>Where</dt><dd><a href="{{ .mapUrl }}">{{ .place }}, {{ .address }}</a></dd>
+  <dt>Who</dt><dd>Boys' and girls' troops, ages 11–17</dd>
+  <dt>What</dt><dd>Monthly campouts, summer camp, service, and high adventure</dd>
+</dl>
+{{- end }}

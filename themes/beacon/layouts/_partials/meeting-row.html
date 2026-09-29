@@ -1,0 +1,12 @@
+{{- with site.Params.meeting }}
+<li class="event-row">
+  <div class="date-badge" aria-hidden="true"><span class="mon">Every</span><span class="day">{{ substr .day 0 3 | upper }}</span></div>
+  <div class="event-body">
+    <h3>Troop meeting</h3>
+    <p>{{ .day }} · {{ .time }} · {{ .place }}, {{ .address }}</p>
+  </div>
+  <div class="event-actions">
+    <a class="btn btn-ghost" href="{{ .mapUrl }}">Directions</a>
+  </div>
+</li>
+{{- end }}

@@ -1,0 +1,13 @@
+{{- with .Resources.ByType "image" }}
+<section aria-labelledby="photos-h">
+  <h2 id="photos-h">Photos</h2>
+  <ul class="gallery">
+    {{- range . }}
+    {{- $t := .Fill "480x360 Center webp q75" }}
+    {{- $full := .Fit "1800x1800 webp q82" }}
+    {{- $alt := .Title | default (printf "Photo from %s" $.Title) }}
+    <li><a href="{{ $full.RelPermalink }}"><img src="{{ $t.RelPermalink }}" width="{{ $t.Width }}" height="{{ $t.Height }}" alt="{{ $alt }}" loading="lazy"></a></li>
+    {{- end }}
+  </ul>
+</section>
+{{- end }}
