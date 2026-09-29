@@ -1,4 +1,14 @@
 /* Beacon — Troop 924 theme. Palette from the Evanston city flag. */
+/* Self-hosted, preloaded in head.html so first paint uses the real fonts. */
+@font-face {
+  font-family: "Fraunces"; font-style: normal; font-weight: 500 700; font-display: swap;
+  src: url("/fonts/fraunces-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Source Sans 3"; font-style: normal; font-weight: 400 700; font-display: swap;
+  src: url("/fonts/source-sans-3-latin.woff2") format("woff2");
+}
+
 :root {
   --field: #1b4f29;       /* flag green */
   --field-deep: #143d1f;
@@ -63,31 +73,42 @@ h1, h2, h3 { font-family: var(--display); line-height: 1.1; margin: 0; }
   position: absolute; top: 0; right: 0; bottom: 0;
   width: 380px; height: 100%;
   pointer-events: none;
+  transition: width .5s ease;
 }
-.bands .gold { fill: var(--gold); }
-.bands .lake { fill: var(--lake); }
-.masthead-inner { position: relative; padding-right: 400px; }
+/* Skew keeps the flag's 15° lean at any size; horizontal widths are preserved,
+   so gold stays 34.2% of the band width on every row. The parent clips the overhang. */
+.bands::before {
+  content: ""; position: absolute; inset: 0;
+  transform: skewX(15deg); transform-origin: top left;
+  background: linear-gradient(to right, var(--gold) 34.2%, var(--lake) 34.2%);
+}
+.masthead-inner { position: relative; padding-right: 400px; transition: padding-right .5s ease; }
+@media (prefers-reduced-motion: reduce) { .bands, .masthead-inner { transition: none; } }
 
 .topnav {
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
   padding-block: 28px;
 }
 .brand { display: flex; align-items: baseline; gap: 14px; color: #fff; text-decoration: none; }
+a.brand:hover { color: #fff; text-decoration: underline overline; }
 .brand-name { font-family: var(--display); font-weight: 700; font-size: 30px; letter-spacing: -0.01em; }
 .brand-place { font-size: 14px; text-transform: uppercase; letter-spacing: 0.14em; opacity: 0.85; }
-.menu { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; font-weight: 600; font-size: 17px; }
+.menu { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; font-weight: 600; font-size: 17px; }
 .menu a { color: #fff; text-decoration: none; padding-block: 10px; }
 .menu a:hover, .menu a[aria-current] { text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 3px; text-underline-offset: 8px; }
 .menu-mobile { display: none; }
 
-.hero { padding-block: 64px 96px; max-width: 800px; display: flex; flex-direction: column; gap: 26px; }
+.hero { padding-block: 1rem 2rem; max-width: 800px; display: flex; flex-direction: column; gap: 26px; }
 .eyebrow { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; }
 .masthead .eyebrow { color: var(--gold); }
-.hero h1 { font-size: clamp(44px, 5.4vw, 76px); letter-spacing: -0.02em; line-height: 1.02; }
+.hero h1 { font-size: clamp(44px, 5.4vw, 56px); letter-spacing: -0.02em; line-height: 1.02; }
 .hero p.lede { margin: 0; font-size: 21px; color: var(--on-field); max-width: 640px; }
 .hero-logo {
-  position: absolute; top: 140px; right: 365px; width: 170px;
+  position: absolute; top: 140px; right: 340px; width: 170px; scale: 1;
+  transition: scale .5s ease, top .5s ease, right .5s ease, opacity .5s ease, display .5s allow-discrete;
 }
+@starting-style { .hero-logo { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .hero-logo { transition: none; } }
 
 .page-head { padding-block: 24px 64px; max-width: 900px; display: flex; flex-direction: column; gap: 14px; }
 .page-head h1 { font-size: clamp(40px, 4.6vw, 64px); letter-spacing: -0.015em; }
@@ -237,15 +258,16 @@ h1, h2, h3 { font-family: var(--display); line-height: 1.1; margin: 0; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1180px) {
-  .hero-logo { display: none; }
+  .hero-logo { scale: 0.75; right: 220px; top: 60px; }
   .bands { width: 220px; }
-  .masthead-inner { padding-right: 180px; }
+  .masthead-inner { padding-right: 210px; }
   .menu { gap: 20px; }
   .event-layout { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 960px) {
+  .hero-logo { scale: 0.55; right: 180px; top: 60px; }
   .menu-desktop { display: none; }
-  .menu-mobile { display: block; position: relative; }
+  .menu-mobile { display: block; position: relative; background: var(--field); border-radius: 6px; margin-right: 1rem; }
   .menu-mobile summary {
     list-style: none; cursor: pointer; min-height: 44px; padding: 0 16px;
     display: flex; align-items: center; border: 2px solid #fff; border-radius: 6px; font-weight: 700;
@@ -263,7 +285,8 @@ h1, h2, h3 { font-family: var(--display); line-height: 1.1; margin: 0; }
 }
 @media (max-width: 700px) {
   body { font-size: 17px; }
-  .bands { width: 96px; }
+  .bands { width: 160px; }
+  .hero-logo { display: none; opacity: 0; }
   .masthead-inner { padding-right: 88px; }
   .topnav { padding-block: 20px; }
   .brand-place { display: none; }

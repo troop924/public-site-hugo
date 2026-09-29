@@ -1,6 +1,6 @@
 ---
 title: "Troop 924 · Evanston"
-headline: "Campouts, canoes and a lot of learning to lead."
+headline: "Scouts lead<br>Parents Support"
 lede: "Troop 924 is a Scout-led troop for boys and girls ages 11–17, meeting Tuesday nights at Northminster Presbyterian Church."
 program:
   - title: Camping

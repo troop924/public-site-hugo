@@ -1,10 +1,3 @@
 {{- /* Evanston flag bands: gold (beach) and blue (lake), leaning down-right like the flag.
-     Pass (dict "h" <viewBox height> "w" <viewBox width>). Slope matches the flag: 0.268 px across per px down. */ -}}
-{{- $w := .w | default 380 -}}
-{{- $h := .h | default 640 -}}
-{{- $s := mul $h 0.268 -}}
-{{- $gw := mul $w 0.342 -}}
-<svg class="bands" viewBox="0 0 {{ $w }} {{ $h }}" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-  <polygon class="gold" points="0,0 {{ $gw }},0 {{ add $gw $s }},{{ $h }} {{ $s }},{{ $h }}"/>
-  <polygon class="lake" points="{{ $gw }},0 {{ $w }},0 {{ $w }},{{ $h }} {{ add $gw $s }},{{ $h }}"/>
-</svg>
+     Drawn in CSS (.bands) with skewX(15deg) so the angle holds at any size. */ -}}
+<div class="bands" aria-hidden="true"></div>

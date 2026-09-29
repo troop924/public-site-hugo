@@ -14,9 +14,7 @@ While advancement is an important part of the Troop program, it is not our prima
 
 ## Leadership
 
-Our current Scoutmaster is Marcello Bondurant. Marcello is an Evanston native who has also served as a Cubmaster, as a District Commissioner, and as an Assistant Scoutmaster for the 2017 National Boy Scout Jamboree.
-
-The Scoutmaster is supported by a Troop Committee, led by Tisha Martin, in which all parents are encouraged to participate. Only through participation by parents in a variety of roles (treasurer, event planners, fundraising organizers, and others) can the Troop give the Scouts a full experience of Scouting.
+Our current Scoutmaster is Jerry Wright. The Scoutmaster is supported by a Troop Committee, led by Tisha Martin, in which all parents are encouraged to participate. Only through participation by parents in a variety of roles (treasurer, event planners, fundraising organizers, and others) can the Troop give the Scouts a full experience of Scouting.
 
 Troop 924 belongs to the Potawatomi District within the [Northeast Illinois Council (NEIC)](https://neic.org/). Scouts and parents manage troop participation and advancement in [Scoutbook](https://www.scoutbook.com).
 

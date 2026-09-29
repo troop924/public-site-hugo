@@ -1,12 +1,12 @@
 {{ define "header" }}
 <header class="masthead">
-  {{ partial "bands.html" (dict "h" 640) }}
+  {{ partial "bands.html" . }}
   <img class="hero-logo" src="{{ "images/scouts-bsa-white.png" | relURL }}" alt="Scouts BSA" width="170" height="251">
   <div class="wrap masthead-inner">
     {{ partial "nav.html" . }}
     <div class="hero">
       <p class="eyebrow">{{ site.Params.tagline }}</p>
-      <h1>{{ .Params.headline | default .Title }}</h1>
+      <h1>{{ .Params.headline | default .Title | safeHTML }}</h1>
       <p class="lede">{{ .Params.lede | default site.Params.description }}</p>
       <div class="btn-row">
         <a class="btn btn-gold" href="#join">Visit a meeting</a>
