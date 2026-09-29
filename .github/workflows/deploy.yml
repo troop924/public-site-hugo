@@ -17,14 +17,14 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  HUGO_VERSION: 0.150.0
+  HUGO_VERSION: 0.166.0
   TZ: America/Chicago
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install Hugo
         run: |
@@ -34,7 +34,7 @@ jobs:
       - name: Build
         run: hugo --gc --minify --environment production
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: site
           path: public
@@ -46,28 +46,30 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: site
           path: public
 
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-          aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+          aws-region: ${{ vars.AWS_REGION || 'us-east-2' }}
 
-      # Fingerprinted CSS and resized images never change under the same name: cache them for a year.
-      - name: Upload long-lived assets
+      # Fingerprinted CSS and Hugo-processed images (*_hu_*) get a new name when they change:
+      # cache them for a year. Uploaded first so new pages never reference a missing file.
+      - name: Upload fingerprinted assets
         run: |
           aws s3 sync public/ "s3://${{ vars.S3_BUCKET }}/" \
-            --exclude "*" --include "css/*" --include "*.webp" --include "*.jpg" --include "*.png" \
-            --cache-control "public, max-age=31536000, immutable"
+            --exclude "*" --include "css/*" --include "*_hu_*" \
+            --cache-control "public, max-age=31536000, immutable" --delete
 
-      # Everything else (HTML, PDFs, redirects): short cache, and remove files no longer in the site.
+      # Everything else (HTML, PDFs, fonts, original images): short cache.
+      # --delete in both steps removes files no longer in the site; each only touches its own files.
       - name: Upload pages and remove stale files
         run: |
           aws s3 sync public/ "s3://${{ vars.S3_BUCKET }}/" \
-            --exclude "css/*" --exclude "*.webp" --exclude "*.jpg" --exclude "*.png" \
+            --exclude "css/*" --exclude "*_hu_*" \
             --cache-control "public, max-age=300" --delete
 
       - name: Invalidate CloudFront
