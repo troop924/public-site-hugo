@@ -63,27 +63,34 @@ h1, h2, h3 { font-family: var(--display); line-height: 1.1; margin: 0; }
 .wrap { max-width: 1440px; margin: 0 auto; padding-inline: var(--gutter); }
 
 /* ---------- Header / flag bands ---------- */
+/* Registered so they can be transitioned: the band, the header padding, the mobile Menu's
+   offset and the hero text wrap are all computed from these, so they animate in lockstep. */
+@property --band-w { syntax: "<length>"; inherits: true; initial-value: 380px; }
+@property --inner-pr { syntax: "<length>"; inherits: true; initial-value: 400px; }
 .masthead {
+  --band-w: 380px; --inner-pr: 400px; --nav-pad: 28px; --gap: 12px;
+  transition: --band-w .5s ease, --inner-pr .5s ease;
   position: relative;
   background: var(--field);
   color: #fff;
-  overflow: hidden;
+  display: flow-root; /* contains margins without clipping, so the mobile menu can drop below */
 }
 .bands {
   position: absolute; top: 0; right: 0; bottom: 0;
   width: 380px; height: 100%;
+  overflow: hidden; /* clips the skewed overhang */
   pointer-events: none;
-  transition: width .5s ease;
 }
+.masthead .bands { width: var(--band-w); }
 /* Skew keeps the flag's 15° lean at any size; horizontal widths are preserved,
-   so gold stays 34.2% of the band width on every row. The parent clips the overhang. */
+   so gold stays 34.2% of the band width on every row. .bands clips the overhang. */
 .bands::before {
   content: ""; position: absolute; inset: 0;
   transform: skewX(15deg); transform-origin: top left;
   background: linear-gradient(to right, var(--gold) 34.2%, var(--lake) 34.2%);
 }
-.masthead-inner { position: relative; padding-right: 400px; transition: padding-right .5s ease; }
-@media (prefers-reduced-motion: reduce) { .bands, .masthead-inner { transition: none; } }
+.masthead-inner { position: relative; padding-right: var(--inner-pr); }
+@media (prefers-reduced-motion: reduce) { .masthead, .site-footer .bands { transition: none; } }
 
 .topnav {
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
@@ -103,6 +110,7 @@ a.brand:hover { color: #fff; text-decoration: underline overline; }
 .masthead .eyebrow { color: var(--gold); }
 .hero h1 { font-size: clamp(44px, 5.4vw, 56px); letter-spacing: -0.02em; line-height: 1.02; }
 .hero p.lede { margin: 0; font-size: 21px; color: var(--on-field); max-width: 640px; }
+.hero-shape { display: none; }
 .hero-logo {
   position: absolute; top: 140px; right: 340px; width: 170px; scale: 1;
   transition: scale .5s ease, top .5s ease, right .5s ease, opacity .5s ease, display .5s allow-discrete;
@@ -250,7 +258,7 @@ a.brand:hover { color: #fff; text-decoration: underline overline; }
 
 /* ---------- Footer ---------- */
 .site-footer { background: var(--field); color: var(--on-field); position: relative; overflow: hidden; margin-top: auto; }
-.site-footer .bands { width: 170px; }
+.site-footer .bands { width: 170px; transition: width .5s ease; }
 .footer-inner { position: relative; padding-block: 44px; padding-right: 200px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 40px; font-size: 16px; }
 .footer-name { font-family: var(--display); font-size: 24px; font-weight: 700; color: #fff; }
 .site-footer a { color: #fff; }
@@ -259,15 +267,17 @@ a.brand:hover { color: #fff; text-decoration: underline overline; }
 /* ---------- Responsive ---------- */
 @media (max-width: 1180px) {
   .hero-logo { scale: 0.75; right: 220px; top: 60px; }
-  .bands { width: 220px; }
-  .masthead-inner { padding-right: 210px; }
-  .menu { gap: 20px; }
+  .masthead { --band-w: 220px; --inner-pr: 210px; }
+  .menu { gap: 15px; margin-right: 1rem; }
   .event-layout { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 960px) {
   .hero-logo { scale: 0.55; right: 180px; top: 60px; }
   .menu-desktop { display: none; }
-  .menu-mobile { display: block; position: relative; background: var(--field); border-radius: 6px; margin-right: 1rem; }
+  .menu-mobile { display: block; position: relative; background: var(--field); border-radius: 6px; }
+  /* Keep Menu on the green: its right edge sits --gap left of the band's edge at the
+     button's top (--nav-pad down, the nav's padding). */
+  .masthead .topnav { margin-right: calc(var(--band-w) + var(--gap) - tan(15deg) * var(--nav-pad) - var(--inner-pr)); }
   .menu-mobile summary {
     list-style: none; cursor: pointer; min-height: 44px; padding: 0 16px;
     display: flex; align-items: center; border: 2px solid #fff; border-radius: 6px; font-weight: 700;
@@ -285,14 +295,29 @@ a.brand:hover { color: #fff; text-decoration: underline overline; }
 }
 @media (max-width: 700px) {
   body { font-size: 17px; }
-  .bands { width: 160px; }
+  .masthead { --band-w: clamp(96px, 30vw, 160px); --inner-pr: 88px; --nav-pad: 20px; }
+  .masthead:has(.hero) { --inner-pr: var(--gutter); }
   .hero-logo { display: none; opacity: 0; }
-  .masthead-inner { padding-right: 88px; }
-  .topnav { padding-block: 20px; }
+  .topnav { padding-block: 20px; gap: 12px; }
   .brand-place { display: none; }
   .brand-name { font-size: 26px; }
   .hero { padding-block: 32px 56px; }
   .hero p.lede { font-size: 19px; }
+  /* Text wraps along the gold band's 15° edge. Floats only shape line boxes in block
+     layout, so the hero and button row drop flex here. The triangle is the part of the
+     band that cuts into the hero's content box, plus a 12px gap; --y0 is how far the
+     hero's content starts below the top of the masthead (nav 84px + padding 32px). */
+  .hero { display: block; }
+  .masthead .hero > :not(.hero-shape) + * { margin-top: 26px; }
+  .hero-shape {
+    --y0: 116px;
+    --shape-w: calc(var(--band-w) - var(--gutter) + var(--gap) - tan(15deg) * var(--y0));
+    display: block; float: right;
+    width: var(--shape-w); height: calc(var(--shape-w) / tan(15deg));
+    shape-outside: polygon(0 0, 100% 0, 100% 100%);
+  }
+  .hero .btn-row { display: block; }
+  .hero .btn-row .btn { margin: 0 10px 14px 0; }
   .event-row { grid-template-columns: 76px minmax(0, 1fr); gap: 16px 18px; padding: 20px; align-items: start; }
   .date-badge { min-height: 76px; }
   .date-badge .day { font-size: 20px; }

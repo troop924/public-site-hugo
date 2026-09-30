@@ -5,6 +5,7 @@
   <div class="wrap masthead-inner">
     {{ partial "nav.html" . }}
     <div class="hero">
+      <span class="hero-shape" aria-hidden="true"></span>
       <p class="eyebrow">{{ site.Params.tagline }}</p>
       <h1>{{ .Params.headline | default .Title | safeHTML }}</h1>
       <p class="lede">{{ .Params.lede | default site.Params.description }}</p>
