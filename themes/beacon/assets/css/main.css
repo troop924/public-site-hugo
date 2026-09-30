@@ -67,9 +67,10 @@ h1, h2, h3 { font-family: var(--display); line-height: 1.1; margin: 0; }
    offset and the hero text wrap are all computed from these, so they animate in lockstep. */
 @property --band-w { syntax: "<length>"; inherits: true; initial-value: 380px; }
 @property --inner-pr { syntax: "<length>"; inherits: true; initial-value: 400px; }
+@property --menu-edge { syntax: "<number>"; inherits: true; initial-value: 0; }
 .masthead {
-  --band-w: 380px; --inner-pr: 400px; --nav-pad: 28px; --gap: 12px;
-  transition: --band-w .5s ease, --inner-pr .5s ease;
+  --band-w: 380px; --inner-pr: 400px; --nav-pad: 28px; --gap: 12px; --menu-edge: 0;
+  transition: --band-w .5s ease, --inner-pr .5s ease, --menu-edge .5s ease;
   position: relative;
   background: var(--field);
   color: #fff;
@@ -276,8 +277,13 @@ a.brand:hover { color: #fff; text-decoration: underline overline; }
   .menu-desktop { display: none; }
   .menu-mobile { display: block; position: relative; background: var(--field); border-radius: 6px; }
   /* Keep Menu on the green: its right edge sits --gap left of the band's edge at the
-     button's top (--nav-pad down, the nav's padding). */
-  .masthead .topnav { margin-right: calc(var(--band-w) + var(--gap) - tan(15deg) * var(--nav-pad) - var(--inner-pr)); }
+     button's top (--nav-pad down, the nav's padding). --menu-edge blends to the
+     masthead's right gutter instead (0 = beside the band, 1 = far right). */
+  .masthead .topnav {
+    margin-right: calc(
+      (1 - var(--menu-edge)) * (var(--band-w) + var(--gap) - tan(15deg) * var(--nav-pad) - var(--inner-pr))
+      + var(--menu-edge) * (var(--gutter) - var(--inner-pr)));
+  }
   .menu-mobile summary {
     list-style: none; cursor: pointer; min-height: 44px; padding: 0 16px;
     display: flex; align-items: center; border: 2px solid #fff; border-radius: 6px; font-weight: 700;
@@ -332,4 +338,10 @@ a.brand:hover { color: #fff; text-decoration: underline overline; }
   .facts dd { margin-bottom: 12px; }
   .site-footer .bands { width: 60px; }
   .footer-inner { padding-right: 70px; }
+}
+
+/* Below 375px (360px Androids, old iPhones, Display Zoom, 400% browser zoom) "Troop 924" and Menu no longer
+   fit left of the band, so Menu moves over the band to the right edge. */
+@media (max-width: 374px) {
+  .masthead { --menu-edge: 1; }
 }
