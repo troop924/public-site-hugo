@@ -4,7 +4,7 @@ description: How parents and guardians support the troop, and what adult leaders
 aliases: ["/parents.html"]
 ---
 
-Parents are a vital part of any well-run Scout troop. Each Scout deserves at least one caring adult. Being a Scout parent is also a learning experience: it is difficult to let go and allow our youths to manage themselves. The reward comes as we watch our children grow into young adults who can handle the conflicts, problems, and issues life throws at them. This is the process of watching our Scouts develop into leaders.
+Adult leaders are a vital part of any well-run Scout troop. Each Scout deserves at least one caring adult. Being a Scout parent is also a learning experience: it is difficult to let go and allow our youths to manage themselves. The reward comes as we watch our children grow into young adults who can handle the conflicts, problems, and issues life throws at them. This is the process of watching our Scouts develop into leaders.
 
 ## The Troop Committee
 
