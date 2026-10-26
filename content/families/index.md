@@ -20,6 +20,10 @@ All adult leaders must complete [training](https://www.scouting.org/training/adu
 
 Uniforms can be bought at the NEIC Scout Store in Vernon Hills or at the [official online Scout Shop](https://www.scoutshop.org).
 
+## Summer camp
+
+Use the [Ma-Ka-Ja-Wan Merit Badge Planner](/makajawan-planner/) to help your Scout pick merit badges and build a camp schedule.
+
 ## Getting started
 
 - [New Family Orientation](/NewFamilyOrientation.pdf) (PDF)

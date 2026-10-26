@@ -1,0 +1,155 @@
+{{- /* Ma-Ka-Ja-Wan merit badge planner. App code and schedule data are in assets/planner/;
+     badge and map images are in static/makajawan-planner/img/. */ -}}
+{{ define "headafter" }}{{ with .Params.subtitle }}<p class="meta">{{ . }}</p>{{ end }}{{ end }}
+{{ define "head" }}
+{{- $css := resources.Get "planner/planner.css" | resources.Copy "css/planner.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{ end }}
+{{ define "main" }}
+<div class="wrap mbp">
+<div class="mbp-layout">
+<div class="mbp-main">
+
+  <section class="card intro">
+    {{ .Content }}
+  </section>
+
+  <section class="card" aria-labelledby="plan-h">
+    <h2 id="plan-h">Your plan</h2>
+    <div class="controls-row">
+      <div class="control-col">
+        <div class="control">
+          <div class="section-label">Camp</div>
+          <div class="toggle-group">
+            <label class="toggle-btn is-disabled" id="btn-west" title="West Camp isn't available yet"><input type="radio" name="camp" disabled> West Camp</label>
+            <label class="toggle-btn active" id="btn-east"><input type="radio" name="camp" checked onchange="setCamp('east')"> East Camp</label>
+          </div>
+        </div>
+        <div class="control">
+          <label class="section-label" for="threshold">Travel warning threshold</label>
+          <div class="threshold-row">
+            <input type="range" id="threshold" min="2" max="20" value="10" step="1">
+            <span id="threshold-val">10 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-col">
+        <div class="controls-row tight">
+          <div class="control">
+            <div class="section-label">Scout year</div>
+            <div class="toggle-group">
+              <label class="toggle-btn active" id="btn-year-any"><input type="radio" name="scout-year" checked onchange="setScoutYear(null)"> Any</label>
+              <label class="toggle-btn" id="btn-year-1"><input type="radio" name="scout-year" onchange="setScoutYear(1)"> 1st</label>
+              <label class="toggle-btn" id="btn-year-2"><input type="radio" name="scout-year" onchange="setScoutYear(2)"> 2nd</label>
+              <label class="toggle-btn" id="btn-year-3"><input type="radio" name="scout-year" onchange="setScoutYear(3)"> 3rd+</label>
+            </div>
+          </div>
+          <div class="control">
+            <label class="section-label" for="scout-age">Scout age</label>
+            <input type="number" class="age-input" id="scout-age" min="10" max="18" placeholder="Any" oninput="setScoutAge()">
+          </div>
+        </div>
+        <div id="trailblazer-note" class="info-note" style="display:none;">
+          First-year Scouts are encouraged to take <strong>Trailblazer</strong>.
+        </div>
+      </div>
+    </div>
+
+    <div class="slot-head">
+      <div class="section-label">Morning</div>
+      <span class="slot-tally" id="slot-tally">0 of 4 slots</span>
+    </div>
+    <div id="selected-chips" class="sel-chips"></div>
+    <div class="slot-bar" aria-hidden="true">
+      <div class="slot-block" id="s0"></div>
+      <div class="slot-block" id="s1"></div>
+      <div class="slot-block" id="s2"></div>
+      <div class="slot-block" id="s3"></div>
+    </div>
+
+    <div class="slot-head">
+      <div class="section-label">Afternoon &amp; evening</div>
+    </div>
+    <div id="selected-pm-chips" class="sel-chips"></div>
+
+    <div><button type="button" class="pl-btn" onclick="clearAll()">Clear</button></div>
+  </section>
+
+  <section class="card" aria-labelledby="results-h">
+    <h2 id="results-h">Schedules</h2>
+    <div id="results-area"><p class="no-results">Select morning merit badges to build a schedule.</p></div>
+  </section>
+
+  <section class="card" aria-labelledby="am-h">
+    <div class="mb-section-header">
+      <h2 id="am-h">Morning merit badges <span id="mb-summary-hint"></span></h2>
+      <div id="mb-toggle-controls">
+        <div class="toggle-group">
+          <label class="toggle-btn" id="btn-area"><input type="radio" name="view-mode" onchange="setView('area')"> By location</label>
+          <label class="toggle-btn active" id="btn-alpha"><input type="radio" name="view-mode" checked onchange="setView('alpha')"> A&ndash;Z</label>
+        </div>
+        <button type="button" class="toggle-btn has-switch" id="btn-detail" onclick="toggleDetailView()">Detailed view</button>
+        <button type="button" class="toggle-btn has-switch" id="btn-table" onclick="toggleTableView()">Table view</button>
+        <button type="button" class="toggle-btn has-switch" id="btn-eagle" onclick="toggleEagleOnly()">&#x1F985; Eagle req. only</button>
+      </div>
+    </div>
+    <div id="eagle-hidden-note" class="hint" style="display:none;"></div>
+
+    <div id="mb-list"></div>
+
+    <details class="legend-wrap" open>
+      <summary>Legend</summary>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-swatch one"></span> One hour</div>
+        <div class="legend-item"><span class="legend-swatch two"></span> Two hours</div>
+        <div class="legend-item">&#x1F985; Eagle-required</div>
+        <div class="legend-item">&#x1F4B2; Has a cost</div>
+      </div>
+      <div class="legend-row">
+        <div class="legend">
+          <div class="legend-section-label">
+            Popularity / risk of filling up quickly, based on past years. How quickly to register to get in:
+          </div>
+          <div class="legend-item">&#x1F525; day of registration (5/1)</div>
+          <div class="legend-item">&#x23F1;&#xFE0F; week of registration</div>
+          <div class="legend-item">&#x23F3; ~two weeks</div>
+        </div>
+        <div class="legend">
+          <div class="legend-section-label">Based on the Scout's year:</div>
+          <div class="legend-item"><span class="legend-swatch soft-rec"></span> Recommended</div>
+          <div class="legend-item"><span class="legend-swatch soft-warn"></span> Not recommended</div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section class="card" aria-labelledby="pm-h">
+    <h2 id="pm-h">Afternoon &amp; evening merit badges</h2>
+    <div class="info-note">
+      <p>During afternoon sessions, Scouts can also work on all the morning merit badges above during Open Program, at every location except Aquatics.</p>
+      <p>These merit badges are only offered in the afternoon and evening:</p>
+    </div>
+    <div id="pm-list"></div>
+  </section>
+
+</div>
+
+<aside class="card map-card" id="map-card" aria-labelledby="map-h">
+  <h2 id="map-h">Camp map</h2>
+  <div id="camp-map">
+    <img src="{{ "makajawan-planner/img/makajawan-map.jpeg" | relURL }}" alt="Ma-Ka-Ja-Wan camp map"
+         onerror="this.closest('.map-card').style.display='none'">
+    <div id="map-markers"></div>
+  </div>
+  <div id="map-coords-log" class="hint"></div>
+</aside>
+</div>
+</div>
+
+<script>const PLANNER_ASSETS = {{ "makajawan-planner/" | relURL }};</script>
+{{- $data := resources.Get "planner/schedule-data.js" | minify | fingerprint }}
+{{- $app := resources.Get "planner/planner.js" | minify | fingerprint }}
+<script src="{{ $data.RelPermalink }}" integrity="{{ $data.Data.Integrity }}"></script>
+<script src="{{ $app.RelPermalink }}" integrity="{{ $app.Data.Integrity }}"></script>
+{{ end }}
