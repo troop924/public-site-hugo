@@ -31,7 +31,7 @@ disableKinds = ["taxonomy", "term"]
     season = "during the school year"
     place = "Northminster Presbyterian Church"
     address = "2515 Central Park Ave, Evanston"
-    mapUrl = "https://www.google.com/maps/search/?api=1&query=2515+Central+Park+Ave+Evanston+IL"
+    mapUrl = "https://maps.apple/p/0DXdaA5orvHwvu"
 
   [params.social]
     facebook = ""
