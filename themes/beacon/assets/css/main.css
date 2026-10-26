@@ -347,3 +347,51 @@ a.brand:hover { color: #fff; text-decoration: underline overline; }
 @media (max-width: 374px) {
   .masthead { --menu-edge: 1; }
 }
+
+/* ---------- Meetings in listings ---------- */
+/* Lighter than events so campouts and special events stand out in the flow. */
+.event-row.meeting { padding-block: 14px; background: transparent; border-color: var(--rule-strong); }
+.event-row.meeting .date-badge { min-height: 68px; background: var(--card); color: var(--field); border: 2px solid var(--field); }
+.event-row.meeting .date-badge .mon { color: var(--blue); }
+.event-row.meeting .date-badge .day { font-size: 22px; }
+.event-row.meeting .event-body { gap: 4px; }
+.event-row.meeting h3 { font-size: 21px; }
+.event-row.meeting .btn { min-height: 40px; padding: 0 16px; font-size: 15px; }
+.meeting-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.meeting-head .tag { padding: 1px 8px; font-size: 13px; }
+.event-body .meeting-note { font-size: 15px; color: #6b4d05; }
+.event-body .meeting-with { font-size: 15px; }
+.event-body .meeting-with strong { color: var(--field); }
+.event-body .meeting-with.cancelled { text-decoration: line-through; }
+.tag-repeat { background: #e3edf7; color: #1d4f80; }
+.tag-moved { background: #fbeecb; color: #6b4d05; }
+.tag-cancel { background: #f6dcd7; color: #8a2a1c; }
+.event-row.cancelled h3 { text-decoration: line-through; color: var(--muted); }
+.event-row.cancelled .date-badge { border-color: var(--rule-strong); color: var(--muted); }
+
+/* Home page "What's next" tabs */
+.tabs { display: inline-flex; gap: 4px; padding: 4px; background: var(--card); border: 1px solid var(--rule); border-radius: 8px; }
+.tabs[hidden] { display: none; }
+.tabs [role="tab"] {
+  min-height: 44px; padding: 0 22px; border: 0; border-radius: 6px; background: transparent;
+  font: 700 17px/1 var(--body); color: var(--muted); cursor: pointer;
+}
+.tabs [role="tab"]:hover { color: var(--ink); }
+.tabs [role="tab"][aria-selected="true"] { background: var(--field); color: #fff; }
+.tab-panel + .tab-panel { margin-top: 32px; }
+.tab-panel[hidden] { display: none; }
+.panel-foot { margin: 20px 0 0; font-weight: 600; }
+
+.event-layout.solo { grid-template-columns: minmax(0, 420px); }
+
+/* Committee page */
+.section-intro { padding-top: 64px; font-size: 19px; }
+.section-intro + .section { padding-top: 48px; }
+.past-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.past-date { display: inline-block; min-width: 130px; color: var(--muted); font-variant-numeric: tabular-nums; }
+@media (max-width: 700px) {
+  .event-row.meeting { padding-block: 14px; }
+  .event-row.meeting .date-badge { min-height: 60px; }
+  .event-row.meeting .event-actions { grid-column: 2; }
+  .event-row.meeting .event-actions .btn { flex: 0 0 auto; min-height: 36px; }
+}

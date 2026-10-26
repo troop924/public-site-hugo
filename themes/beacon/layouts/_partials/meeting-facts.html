@@ -1,7 +1,9 @@
-{{- with site.Params.meeting }}
+{{- with index (where hugo.Data.meetings "id" "troop-meeting") 0 }}
+{{- $s := partial "parse-time.html" (dict "value" .startTime "where" "data/meetings.yaml (troop-meeting)") }}
+{{- $e := partial "parse-time.html" (dict "value" .endTime "where" "data/meetings.yaml (troop-meeting)") }}
 <dl class="facts">
-  <dt>When</dt><dd>{{ .day }}, {{ .time }} {{ .season }}</dd>
-  <dt>Where</dt><dd><a href="{{ .mapUrl }}">{{ .place }}, {{ .address }}</a></dd>
+  <dt>When</dt><dd>{{ .day }}s, {{ $s.label }}{{ with $e.label }} – {{ . }}{{ end }} {{ .season }}</dd>
+  <dt>Where</dt><dd><a href="{{ .mapUrl }}">{{ .locationName }}, {{ .locationAddress }}</a></dd>
   <dt>Who</dt><dd>Boys' and girls' troops, ages 11–17</dd>
   <dt>What</dt><dd>Monthly campouts, summer camp, service, and high adventure</dd>
 </dl>

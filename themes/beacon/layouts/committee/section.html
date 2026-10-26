@@ -1,0 +1,29 @@
+{{ define "main" }}
+{{- $com := partial "calendar.html" "committee" }}
+<div class="wrap">
+  {{- with .Content }}
+  <div class="prose section-intro">{{ . }}</div>
+  {{- end }}
+
+  <section class="section" id="upcoming" aria-labelledby="up-h">
+    <div class="section-head">
+      <div><p class="eyebrow">Upcoming</p><h2 id="up-h">Committee meetings</h2></div>
+    </div>
+    {{- with $com.upcoming }}{{ partial "listing.html" . }}{{ else }}<p class="empty">No committee meetings scheduled.</p>{{ end }}
+  </section>
+
+  {{- with $com.past }}
+  <section class="section" id="past" aria-labelledby="past-h">
+    <div class="section-head"><div><p class="eyebrow">Past</p><h2 id="past-h">Earlier meetings</h2></div></div>
+    <ul class="past-list">
+      {{- range . }}
+      <li>
+        <span class="past-date">{{ .Date.Format "Jan 2, 2006" }}</span>
+        {{ if .Content }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ else }}{{ .Title }}{{ end }}
+      </li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end }}
+</div>
+{{ end }}

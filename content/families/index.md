@@ -10,7 +10,7 @@ Parents are a vital part of any well-run Scout troop. Each Scout deserves at lea
 
 Leaders also need support and governance. The troop is supported by an adult board, the Troop Committee, which sets a budget, coordinates troop activities, and helps the Scoutmaster and the Scouts carry out the outdoor program and other activities. Most committee positions take an hour a month or less.
 
-The Troop Committee meets on the second Tuesday of each month, 7:30–8:45 PM during the troop meeting, in the basement "Couch Room" at Northminster Presbyterian Church.
+The Troop Committee meets on the second Monday of each month, 7:30–9:00 PM. See [upcoming committee and subcommittee meetings](/committee/).
 
 ## Adult leaders
 

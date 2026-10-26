@@ -1,0 +1,110 @@
+{{- /* Upcoming dates of one regular meeting from data/meetings.yaml, with its changes
+     (moved/cancelled) and breaks applied. Meetings that name this one under "with" (like the
+     PLC with the troop meeting) are attached to each row as "with". Returns a slice of row dicts. */ -}}
+{{- $m := . -}}
+{{- $where := printf "data/meetings.yaml (%s)" ($m.id | default $m.title) -}}
+{{- $days := dict "Sunday" 0 "Monday" 1 "Tuesday" 2 "Wednesday" 3 "Thursday" 4 "Friday" 5 "Saturday" 6 -}}
+{{- $want := index $days (title (string $m.day)) -}}
+{{- if eq $want nil }}{{ errorf "%s: day %q should be a weekday name like \"Tuesday\"." $where $m.day }}{{ end -}}
+{{- $today := time (now.Format "2006-01-02") -}}
+{{- $todayKey := $today.Format "2006-01-02" -}}
+{{- $limitKey := ($today.AddDate 0 0 (mul 7 ($m.weeksAhead | default 6))).Format "2006-01-02" -}}
+{{- /* Start a month back so a past meeting moved to an upcoming date is still found. */ -}}
+{{- $from := $today.AddDate 0 0 -35 -}}
+
+{{- $regular := slice -}}
+{{- if eq $m.repeat "weekly" -}}
+  {{- $first := $from.AddDate 0 0 (mod (add (sub $want (index $days $from.Weekday.String)) 7) 7) -}}
+  {{- range seq 0 60 -}}
+    {{- $d := $first.AddDate 0 0 (mul 7 .) -}}
+    {{- if le ($d.Format "2006-01-02") $limitKey }}{{ $regular = $regular | append $d }}{{ end -}}
+  {{- end -}}
+{{- else if eq $m.repeat "monthly" -}}
+  {{- $last := eq (string $m.week) "last" -}}
+  {{- $n := 4 }}{{ if not $last }}{{ $n = int ($m.week | default 0) }}{{ end -}}
+  {{- if or (lt $n 1) (gt $n 4) }}{{ errorf "%s: week should be 1–4 or last (2 = the 2nd %s of the month)." $where $m.day }}{{ end -}}
+  {{- $month1 := time (printf "%s-01" ($from.Format "2006-01")) -}}
+  {{- range seq 0 14 -}}
+    {{- $mo := $month1.AddDate 0 . 0 -}}
+    {{- $d := $mo.AddDate 0 0 (add (mod (add (sub $want (index $days $mo.Weekday.String)) 7) 7) (mul 7 (sub $n 1))) -}}
+    {{- if and $last (eq ($d.AddDate 0 0 7).Month $mo.Month) }}{{ $d = $d.AddDate 0 0 7 }}{{ end -}}
+    {{- if le ($d.Format "2006-01-02") $limitKey }}{{ $regular = $regular | append $d }}{{ end -}}
+  {{- end -}}
+{{- else -}}
+  {{- errorf "%s: repeat should be \"weekly\" or \"monthly\"." $where -}}
+{{- end -}}
+
+{{- /* Changes keyed by normal date, for this meeting and for each meeting held with it. */ -}}
+{{- $changesOf := dict -}}
+{{- $linked := where hugo.Data.meetings "with" $m.id -}}
+{{- range (slice $m | append $linked) -}}
+  {{- $c := dict -}}
+  {{- $who := printf "data/meetings.yaml (%s)" (.id | default .title) -}}
+  {{- range .changes -}}
+    {{- if not .date }}{{ errorf "%s: every entry under changes needs the meeting's normal date." $who }}{{ end -}}
+    {{- $c = merge $c (dict ((time .date).Format "2006-01-02") .) -}}
+  {{- end -}}
+  {{- $changesOf = merge $changesOf (dict (string .id) $c) -}}
+{{- end -}}
+
+{{- $out := slice -}}
+{{- range $regular -}}
+  {{- $regularDate := . -}}
+  {{- $key := .Format "2006-01-02" -}}
+  {{- /* Which week of the month this is: 1–4, and whether it's the last one. */ -}}
+  {{- $nth := add (div (sub .Day 1) 7) 1 -}}
+  {{- $isLast := ne (.AddDate 0 0 7).Month .Month -}}
+  {{- $onBreak := false -}}
+  {{- range $m.breaks }}{{ if and (ge $key ((time .from).Format "2006-01-02")) (le $key ((time .to).Format "2006-01-02")) }}{{ $onBreak = true }}{{ end }}{{ end -}}
+  {{- $c := index (index $changesOf (string $m.id)) $key | default dict -}}
+  {{- $date := . }}{{ $movedFrom := "" -}}
+  {{- with index $c "moveTo" }}{{ $date = time . }}{{ $movedFrom = $regularDate.Format "Mon, Jan 2" }}{{ end -}}
+  {{- $cancelled := eq (index $c "cancel") true -}}
+  {{- if and (not $onBreak) (ge ($date.Format "2006-01-02") $todayKey) -}}
+    {{- $f := dict -}}
+    {{- range slice "startTime" "endTime" "locationName" "locationAddress" "mapUrl" -}}
+      {{- $f = merge $f (dict . (index $c . | default (index $m .) | default "")) -}}
+    {{- end -}}
+    {{- $st := partial "parse-time.html" (dict "value" $f.startTime "where" (printf "%s startTime" $where)) -}}
+    {{- $et := partial "parse-time.html" (dict "value" $f.endTime "where" (printf "%s endTime" $where)) -}}
+
+    {{- /* Meetings held with this one (week / exceptWeek pick which weeks). */ -}}
+    {{- $with := slice -}}
+    {{- range $linked -}}
+      {{- $l := . -}}
+      {{- $lw := printf "data/meetings.yaml (%s)" (.id | default .title) -}}
+      {{- $match := true -}}
+      {{- range $field, $keep := dict "week" true "exceptWeek" false -}}
+        {{- with index $l $field -}}
+          {{- $hit := $isLast }}{{ if ne (string .) "last" }}{{ $hit = eq (int .) $nth }}{{ end -}}
+          {{- if ne $hit $keep }}{{ $match = false }}{{ end -}}
+        {{- end -}}
+      {{- end -}}
+      {{- if $match -}}
+        {{- $lc := index (index $changesOf (string $l.id)) $key | default dict -}}
+        {{- $ls := partial "parse-time.html" (dict "value" (index $lc "startTime" | default $l.startTime) "where" (printf "%s startTime" $lw)) -}}
+        {{- $le := partial "parse-time.html" (dict "value" (index $lc "endTime" | default $l.endTime) "where" (printf "%s endTime" $lw)) -}}
+        {{- $with = $with | append (dict
+            "title" $l.title "startTime" $ls.label "endTime" $le.label "clock" $ls.clock
+            "cancelled" (or $cancelled (eq (index $lc "cancel") true))
+            "note" (index $lc "note" | default "")) -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- $out = $out | append (dict
+        "date" $date
+        "sort" (printf "%s %s 0" ($date.Format "2006-01-02") $st.clock)
+        "meeting" true
+        "title" $m.title
+        "repeat" (cond (eq $m.repeat "weekly") "Weekly" "Monthly")
+        "startTime" $st.label "endTime" $et.label
+        "locationName" $f.locationName "mapUrl" $f.mapUrl
+        "cancelled" $cancelled
+        "movedFrom" $movedFrom
+        "note" (index $c "note" | default "")
+        "flag" (index $c "tag" | default "")
+        "with" (sort $with "clock")
+      ) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

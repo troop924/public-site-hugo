@@ -1,0 +1,37 @@
+{{- /* A single meeting (front matter "layout: meeting"): PLC, subcommittee, special meetings.
+     Slimmer than an event page: no packing list, permission slips or trip report. */ -}}
+{{ define "headbefore" }}<a class="back" href="{{ .Parent.RelPermalink }}">← {{ cond (eq .Section "committee") "Committee" "All events" }}</a>{{ end }}
+{{ define "headafter" }}
+<p class="meta">
+  <span>{{ partial "when.html" . }}</span>
+  {{ with .Params.locationName }}<span>{{ . }}</span>{{ end }}
+</p>
+{{ end }}
+{{ define "main" }}
+<div class="wrap event-layout{{ if not .Content }} solo{{ end }}">
+  {{- with .Content }}
+  <div class="stack">
+    <section aria-labelledby="agenda-h"><h2 id="agenda-h">Agenda and notes</h2><div class="prose">{{ . }}</div></section>
+  </div>
+  {{- end }}
+  <aside class="stack">
+    <section class="panel" aria-labelledby="details-h">
+      <h2 id="details-h">The details</h2>
+      <dl class="facts">
+        <dt>When</dt><dd>{{ partial "when.html" . }}</dd>
+        {{- $name := .Params.locationName }}{{ $addr := strings.TrimSpace (.Params.locationAddress | default "") }}
+        {{- if or $name $addr }}
+        <dt>Where</dt><dd>
+          {{- with $name }}{{ with $.Params.mapUrl }}<a href="{{ . }}">{{ end }}{{ . }}{{ with $.Params.mapUrl }}</a>{{ end }}{{ end }}
+          {{- with $addr }}<span class="address">{{ if and $.Params.mapUrl (not $name) }}<a href="{{ $.Params.mapUrl }}">{{ . }}</a>{{ else }}{{ . }}{{ end }}</span>{{ end -}}
+        </dd>
+        {{- end }}
+        {{ with .Params.contact }}<dt>Contact</dt><dd>{{ . }}</dd>{{ end }}
+      </dl>
+      {{- if ge ((.Date).Format "2006-01-02") (now.Format "2006-01-02") }}{{ with .Params.calendarUrl }}
+      <a class="btn btn-ghost" href="{{ . }}">Add to my calendar</a>
+      {{- end }}{{ end }}
+    </section>
+  </aside>
+</div>
+{{ end }}

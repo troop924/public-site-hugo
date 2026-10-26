@@ -1,12 +1,29 @@
-{{- with site.Params.meeting }}
-<li class="event-row">
-  <div class="date-badge" aria-hidden="true"><span class="mon">Every</span><span class="day">{{ substr .day 0 3 | upper }}</span></div>
+{{- /* A meeting in a listing: lighter than an event row. Takes a meeting row dict from calendar.html. */ -}}
+{{- $when := .date.Format "Mon" -}}
+{{- with .startTime }}{{ $when = printf "%s · %s" $when . }}{{ with $.endTime }}{{ $when = printf "%s – %s" $when . }}{{ end }}{{ end -}}
+<li class="event-row meeting{{ if .cancelled }} cancelled{{ end }}">
+  <div class="date-badge" aria-hidden="true"><span class="mon">{{ .date.Format "Jan" }}</span><span class="day">{{ .date.Day }}</span></div>
   <div class="event-body">
-    <h3>Troop meeting</h3>
-    <p>{{ .day }} · {{ .time }} · {{ .place }}, {{ .address }}</p>
+    <div class="meeting-head">
+      <h3>{{ with .url }}<a href="{{ . }}">{{ $.title }}</a>{{ else }}{{ .title }}{{ end }}</h3>
+      {{- if .cancelled }}<span class="tag tag-cancel">Cancelled</span>
+      {{- else if .movedFrom }}<span class="tag tag-moved">Moved</span>{{ end }}
+      {{- with .flag }}<span class="tag tag-open">{{ . }}</span>{{ end }}
+      {{- with .repeat }}<span class="tag tag-repeat">{{ . }}</span>{{ end }}
+      {{- with .tag }}<span class="tag tag-repeat">{{ . }}</span>{{ end }}
+    </div>
+    <p><span class="visually-hidden">{{ .date.Format "Monday, January 2" }} · </span>{{ delimit (slice $when .locationName | complement (slice nil "")) " · " }}</p>
+    {{- range .with }}
+    <p class="meeting-with{{ if .cancelled }} cancelled{{ end }}"><strong>{{ .title }}</strong> {{ .startTime }}{{ with .endTime }} – {{ . }}{{ end }}{{ if and .cancelled (not $.cancelled) }} · cancelled{{ end }}{{ with .note }} · {{ . }}{{ end }}</p>
+    {{- end }}
+    {{- if or .note .movedFrom }}
+    <p class="meeting-note">{{ with .movedFrom }}Moved from {{ . }}.{{ end }} {{ .note }}</p>
+    {{- end }}
   </div>
+  {{- if and (or .mapUrl .url) (not .cancelled) }}
   <div class="event-actions">
-    <a class="btn btn-ghost" href="{{ .mapUrl }}">Directions</a>
+    {{- with .url }}<a class="btn btn-ghost" href="{{ . }}">Details<span class="visually-hidden"> for {{ $.title }}</span></a>{{ end }}
+    {{- with .mapUrl }}<a class="btn btn-ghost" href="{{ . }}">Directions<span class="visually-hidden"> to {{ $.title }}</span></a>{{ end }}
   </div>
+  {{- end }}
 </li>
-{{- end }}

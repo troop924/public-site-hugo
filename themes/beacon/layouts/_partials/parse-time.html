@@ -1,0 +1,24 @@
+{{- /* Reads a loosely written time ("6pm", "6:30 PM", "18:30").
+     Takes dict "value" (the time) "where" (named in the error message).
+     Returns dict "label" ("6:30 PM") "clock" ("18:30", for sorting); both "" when no time is given. */ -}}
+{{- $label := "" }}{{ $clock := "" -}}
+{{- with .value -}}
+  {{- $s := string . -}}
+  {{- $m := findRESubmatch `(?i)^\s*(\d{1,2})(?::([0-5]\d))?\s*(?:([ap])\.?\s*m?\.?)?\s*$` $s 1 -}}
+  {{- if not $m -}}
+    {{- errorf "%s: %q isn't a time Hugo understands. Write it like \"6:00 PM\"." $.where $s -}}
+  {{- else -}}
+    {{- $g := index $m 0 -}}
+    {{- $h := int (strings.TrimLeft "0" (index $g 1) | default "0") -}}
+    {{- $min := index $g 2 | default "00" -}}
+    {{- $ap := lower (index $g 3) -}}
+    {{- if or (gt $h 23) (and $ap (or (lt $h 1) (gt $h 12))) -}}
+      {{- errorf "%s: %q isn't a real time. Write it like \"6:00 PM\"." $.where $s -}}
+    {{- end -}}
+    {{- if and (eq $ap "p") (lt $h 12) }}{{ $h = add $h 12 }}{{ end -}}
+    {{- if and (eq $ap "a") (eq $h 12) }}{{ $h = 0 }}{{ end -}}
+    {{- $clock = printf "%02d:%s" $h $min -}}
+    {{- $label = (time (printf "2000-01-01T%s:00" $clock)).Format "3:04 PM" -}}
+  {{- end -}}
+{{- end -}}
+{{- return dict "label" $label "clock" $clock -}}

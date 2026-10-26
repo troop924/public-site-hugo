@@ -1,0 +1,92 @@
+# Regular meetings. Each upcoming one is listed in date order alongside other events:
+#   calendar: scouts     → home page "Scouts" tab and the Events page
+#   calendar: committee  → home page "Committee" tab and the Committee page
+#
+# repeat: weekly   needs  day: Tuesday
+# repeat: monthly  needs  day: Monday  and  week: 2   (2 = the 2nd Monday; 1–4, or last)
+# weeksAhead: how far ahead to list them (default 6).
+#
+# with: troop-meeting   A meeting held alongside another one (like the PLC before the troop
+#   meeting). It has no schedule of its own: it follows that meeting's dates, breaks, moves and
+#   cancellations, and shows as a line inside that meeting's listing. Give it its own times.
+#   week: last         only on that week of the month (1–4, or last)
+#   exceptWeek: last   every time except that week
+#
+# changes: one meeting is different. Use its NORMAL date, then say what's different.
+#   moveTo     the new date (the listing says "Moved from Mon, Nov 9")
+#   cancel     true: still listed, crossed out, so families know it's not happening
+#   note       short text shown on the listing
+#   tag        short highlight shown next to the title, e.g. "Webelos visit"
+#   startTime, endTime, locationName, locationAddress, mapUrl: if just that meeting differs
+#
+# breaks: stretches with no meetings at all, like summer. Meetings between "from" and
+#   "to" (both included) are left off the listings entirely, rather than shown as cancelled.
+#
+# Uncomment an example (delete the "# ") and edit it. Keep the two-space indents.
+
+- id: troop-meeting
+  title: Troop meeting
+  calendar: scouts
+  repeat: weekly
+  day: Tuesday
+  startTime: "7:30 PM"
+  endTime: "9:00 PM"
+  season: during the school year     # wording for the home page "Thinking about joining?" box
+  locationName: Northminster Presbyterian Church
+  locationAddress: 2515 Central Park Ave, Evanston
+  mapUrl: "https://maps.apple/p/0DXdaA5orvHwvu"
+  weeksAhead: 6
+  breaks:
+    # - from: 2026-12-21       # winter break
+    #   to: 2027-01-04
+    # - from: 2027-06-15       # summer
+    #   to: 2027-08-31
+  changes:
+    - date: 2026-10-27
+      tag: Webelos visit
+      note: Webelos from our sibling Pack join us to get a taste of the troop before they cross over.
+    - date: 2026-11-24       # Tuesday of Thanksgiving week
+      cancel: true
+      note: No meeting Thanksgiving week
+
+- id: plc-weekly
+  title: PLC
+  with: troop-meeting
+  exceptWeek: last           # the monthly PLC (below) takes its place on the last Tuesday
+  startTime: "7:15 PM"
+  endTime: "7:30 PM"
+  changes:
+    # - date: 2026-11-10       # the troop meeting's normal date
+    #   cancel: true           # just the PLC; the troop meeting still happens
+
+- id: plc-monthly
+  title: Monthly PLC
+  with: troop-meeting
+  week: last
+  startTime: "6:30 PM"
+  endTime: "7:30 PM"
+  changes:
+
+- id: committee-meeting
+  title: Committee meeting
+  calendar: committee
+  repeat: monthly
+  day: Monday
+  week: 2
+  startTime: "7:30 PM"
+  endTime: "9:00 PM"
+  locationName: "Northminster Presbyterian Church"
+  locationAddress: "2515 Central Park Ave, Evanston"
+  mapUrl: "https://maps.apple/p/0DXdaA5orvHwvu"
+  weeksAhead: 14
+  breaks:
+    # - from: 2027-07-01       # no committee meetings in July and August
+    #   to: 2027-08-31
+  changes:
+    - date: 2026-10-12
+      moveTo: 2026-10-19
+      note: Moved to the 3rd Monday
+    # - date: 2026-11-09       # 2nd Monday of November
+    #   moveTo: 2026-11-16
+    #   startTime: "7:00 PM"
+    #   note: Moved for Veterans Day

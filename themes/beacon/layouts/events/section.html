@@ -1,5 +1,5 @@
 {{ define "main" }}
-{{- $ev := partial "events.html" . }}
+{{- $ev := partial "calendar.html" "scouts" }}
 {{- $cal := partial "gcal.html" . }}
 <div class="wrap">
   <section class="section" id="upcoming" aria-labelledby="up-h">
@@ -7,10 +7,7 @@
       <div><p class="eyebrow">Upcoming</p><h2 id="up-h">What's next</h2></div>
       <a href="#calendar">Full troop calendar ↓</a>
     </div>
-    <ul class="event-list">
-      {{- range $ev.upcoming }}{{ partial "event-row.html" . }}{{ end }}
-      {{ partial "meeting-row.html" . }}
-    </ul>
+    {{ partial "listing.html" $ev.upcoming }}
   </section>
 
   <section class="section" id="calendar" aria-labelledby="cal-h">
@@ -28,7 +25,7 @@
 
   <section class="section" id="past" aria-labelledby="past-h">
     <div class="section-head"><div><p class="eyebrow">Trip reports</p><h2 id="past-h">Where we've been</h2></div></div>
-    {{- with $ev.past }}
+    {{- with where $ev.past "Layout" "!=" "meeting" }}
     <ul class="card-grid">
       {{- range . }}{{ partial "trip-card.html" . }}{{ end }}
     </ul>

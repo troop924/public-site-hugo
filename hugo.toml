@@ -25,13 +25,7 @@ disableKinds = ["taxonomy", "term"]
   googleCalendar = "r5eoa80otpba34kdfni1o23qfk@group.calendar.google.com"
   charteredBy = "Chartered by Northminster Presbyterian Church · Scouting America"
 
-  [params.meeting]
-    day = "Tuesdays"
-    time = "7:30–9:00 PM"
-    season = "during the school year"
-    place = "Northminster Presbyterian Church"
-    address = "2515 Central Park Ave, Evanston"
-    mapUrl = "https://maps.apple/p/0DXdaA5orvHwvu"
+  # The weekly troop meeting and monthly committee meeting live in data/meetings.yaml.
 
   [params.social]
     facebook = ""

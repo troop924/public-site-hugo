@@ -19,24 +19,29 @@
 {{ end }}
 
 {{ define "main" }}
-{{- $ev := partial "events.html" . }}
+{{- $ev := partial "calendar.html" "scouts" }}
+{{- $com := partial "calendar.html" "committee" }}
 <div class="wrap">
   <section class="section" id="upcoming" aria-labelledby="up-h">
     <div class="section-head">
       <div><p class="eyebrow">Upcoming</p><h2 id="up-h">What's next</h2></div>
-      <a href="{{ "events/" | relURL }}">Full calendar →</a>
+      <div class="tabs" role="tablist" aria-label="Calendars" hidden>
+        <button type="button" role="tab" id="tab-scouts" aria-controls="panel-scouts" aria-selected="true">Scouts</button>
+        <button type="button" role="tab" id="tab-committee" aria-controls="panel-committee" aria-selected="false" tabindex="-1">Committee</button>
+      </div>
     </div>
-    {{- with first (.Params.upcomingCount | default 4) $ev.upcoming }}
-    <ul class="event-list">
-      {{- range . }}{{ partial "event-row.html" . }}{{ end }}
-      {{ partial "meeting-row.html" $ }}
-    </ul>
-    {{- else }}
-    <ul class="event-list">{{ partial "meeting-row.html" . }}</ul>
-    {{- end }}
+    <div class="tab-panel" role="tabpanel" id="panel-scouts" aria-labelledby="tab-scouts">
+      {{ partial "listing.html" (first (.Params.upcomingCount | default 6) $ev.upcoming) }}
+      <p class="panel-foot"><a href="{{ "events/" | relURL }}">Full calendar →</a></p>
+    </div>
+    <div class="tab-panel" role="tabpanel" id="panel-committee" aria-labelledby="tab-committee">
+      {{- with first 4 $com.upcoming }}{{ partial "listing.html" . }}{{ else }}<p class="empty">No committee meetings scheduled.</p>{{ end }}
+      <p class="panel-foot"><a href="{{ "committee/" | relURL }}">All committee meetings →</a></p>
+    </div>
+    <script>{{ (resources.Get "js/tabs.js" | minify).Content | safeJS }}</script>
   </section>
 
-  {{- $reports := where $ev.past "Content" "!=" "" }}
+  {{- $reports := where (where $ev.past "Layout" "!=" "meeting") "Content" "!=" "" }}
   {{- with first 3 $reports }}
   <section class="section" id="past" aria-labelledby="past-h">
     <div class="section-head">

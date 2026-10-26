@@ -1,0 +1,38 @@
+{{- /* One calendar's listings. Pass "scouts" (Events section) or "committee" (Committee section).
+     "Now" is build time; the deploy workflow rebuilds daily so this stays current.
+     Returns:
+       upcoming: rows in date and time order, ending today or later. A row is either
+                 an event (dict "page" …) or a meeting (dict "meeting" true …), mixing
+                 pages and the recurring meetings in data/meetings.yaml. At the same
+                 date and time, the regular meeting comes first.
+       past:     past event and meeting pages, most recent first. */ -}}
+{{- $cal := . -}}
+{{- $section := cond (eq $cal "committee") "committee" "events" -}}
+{{- $today := now.Format "2006-01-02" -}}
+{{- $up := slice }}{{ $past := slice -}}
+{{- range (where site.RegularPages "Section" $section).ByDate -}}
+  {{- $t := partial "event-times.html" . -}}
+  {{- $isMeeting := or (eq $section "committee") (eq .Layout "meeting") -}}
+  {{- if lt ($t.end.Format "2006-01-02") $today -}}
+    {{- $past = $past | append . -}}
+  {{- else -}}
+    {{- $row := dict "page" . "date" $t.start "sort" (printf "%s %s 1" ($t.start.Format "2006-01-02") $t.startClock) "meeting" $isMeeting -}}
+    {{- if $isMeeting -}}
+      {{- $row = merge $row (dict
+          "title" .Title "url" (cond (ne .Content "") .RelPermalink "")
+          "tag" (.Params.category | default "") "note" (.Description | default "")
+          "startTime" $t.startTime "endTime" $t.endTime
+          "locationName" (.Params.locationName | default "") "mapUrl" (.Params.mapUrl | default "")) -}}
+    {{- end -}}
+    {{- $up = $up | append $row -}}
+  {{- end -}}
+{{- end -}}
+{{- range hugo.Data.meetings -}}
+  {{- with .with -}}
+    {{- /* Held with another meeting: listed inside that meeting's row (see occurrences.html). */ -}}
+    {{- if not (where hugo.Data.meetings "id" .) }}{{ errorf "data/meetings.yaml: with: %q doesn't match any meeting's id." . }}{{ end -}}
+  {{- else -}}
+    {{- if eq .calendar $cal }}{{ $up = $up | append (partial "occurrences.html" .) }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- return dict "upcoming" (sort $up "sort") "past" ($past | collections.Reverse) -}}

@@ -1,0 +1,6 @@
+{{- /* Renders upcoming rows from calendar.html: events as full rows, meetings as light rows. */ -}}
+<ul class="event-list">
+  {{- range . }}
+  {{- if .meeting }}{{ partial "meeting-row.html" . }}{{ else }}{{ partial "event-row.html" .page }}{{ end }}
+  {{- end }}
+</ul>
