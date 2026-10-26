@@ -11,6 +11,7 @@ locationName: ""           # short name, shown in the page header, e.g. "Camp So
 locationAddress: |         # optional; one line per row below, each indented two spaces
 
 mapUrl: ""
+eventUrl: ""               # optional: the event's own page, e.g. council registration
 calendarUrl: ""      # optional: "copy to my calendar" link from the event in Google Calendar
 cost: ""
 depart: ""

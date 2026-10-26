@@ -12,6 +12,7 @@ locationAddress: |         # optional; one line per row below, each indented two
   11651 304th Ave
   Trevor, WI 53179
 mapUrl: "https://maps.apple/p/VFvG~j.kuIL71Q"
+eventUrl: "https://scoutingevent.com/129-OA2026FallOrdeal"
 calendarUrl: ""      # optional: "copy to my calendar" link from the event in Google Calendar
 cost: "$25"
 depart: ""

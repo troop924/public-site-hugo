@@ -53,6 +53,7 @@
           {{- with $addr }}<span class="address">{{ if and $.Params.mapUrl (not $name) }}<a href="{{ $.Params.mapUrl }}">{{ . }}</a>{{ else }}{{ . }}{{ end }}</span>{{ end -}}
         </dd>
         {{- end }}
+        {{ with .Params.eventUrl }}<dt>Website</dt><dd><a href="{{ . }}">{{ (urls.Parse .).Host | strings.TrimPrefix "www." }}</a></dd>{{ end }}
         {{ with .Params.cost }}<dt>Cost</dt><dd>{{ . }}</dd>{{ end }}
         {{ with .Params.uniform }}<dt>Uniform</dt><dd>{{ . }}</dd>{{ end }}
         {{ with .Params.contact }}<dt>Contact</dt><dd>{{ . }}</dd>{{ end }}
