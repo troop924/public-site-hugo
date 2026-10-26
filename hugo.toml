@@ -23,6 +23,8 @@ disableKinds = ["taxonomy", "term"]
   email = "scoutmaster@troop924.org"
   # The troop's existing Google Calendar stays the master calendar.
   googleCalendar = "r5eoa80otpba34kdfni1o23qfk@group.calendar.google.com"
+  # Shown above the footer on every page. Delete the line (or set it to "") to hide it.
+  notice = "This site is a work in progress: we're still adding content and editing pages. If you have suggestions, please reach out to Colin Sheaff in the Parents Troop 924 WhatsApp group or at [webmaster@troop924.org](mailto:webmaster@troop924.org)."
   charteredBy = "Chartered by Northminster Presbyterian Church · Scouting America"
 
   # The weekly troop meeting and monthly committee meeting live in data/meetings.yaml.

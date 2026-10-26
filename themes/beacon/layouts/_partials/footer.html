@@ -1,3 +1,6 @@
+{{- with site.Params.notice }}
+<aside class="wrap site-notice" aria-label="About this site"><p>{{ . | markdownify }}</p></aside>
+{{- end }}
 <footer class="site-footer">
   {{ partial "bands.html" . }}
   <div class="wrap footer-inner">
