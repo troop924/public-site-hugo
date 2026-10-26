@@ -11,12 +11,16 @@ buildFuture = true
 enableRobotsTXT = true
 disableKinds = ["taxonomy", "term"]
 
+# Events give startDate (plus optional startTime/endDate/endTime) instead of date.
+[frontmatter]
+  date = ["startDate", ":default"]
+
 [markup.goldmark.renderer]
   unsafe = true   # lets imported legacy HTML pass through until it's cleaned up
 
 [params]
   tagline = "Scouting in Evanston since 1926"
-  description = "Troop 924 is a Scout-led troop for boys and girls ages 11–17, meeting Tuesday nights at Northminster Presbyterian Church in Evanston, Illinois."
+  description = "Troop 924 is a Scout-led troop for youth ages 11–17, meeting Tuesday nights at Northminster Presbyterian Church in Evanston, Illinois."
   email = "scoutmaster@troop924.org"
   # The troop's existing Google Calendar stays the master calendar.
   googleCalendar = "r5eoa80otpba34kdfni1o23qfk@group.calendar.google.com"
