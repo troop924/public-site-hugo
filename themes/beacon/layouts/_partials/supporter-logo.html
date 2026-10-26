@@ -1,0 +1,8 @@
+{{- /* Logo (or name) and note for one supporter. Takes dict "s" (the supporter) "size" (fit box, e.g. "480x200"). */ -}}
+{{- $s := .s }}{{ $logo := "" -}}
+{{- with $s.logo }}{{ $logo = resources.Get (printf "images/supporters/%s" .) }}{{ if not $logo }}{{ errorf "data/supporters.yaml: logo %q isn't in assets/images/supporters/." . }}{{ end }}{{ end -}}
+{{- with $logo -}}
+  {{- if eq .MediaType.SubType "svg" }}<img src="{{ .RelPermalink }}" alt="{{ $s.name }}" loading="lazy">
+  {{- else }}{{ $t := .Fit (printf "%s webp q90" $.size) }}<img src="{{ $t.RelPermalink }}" width="{{ $t.Width }}" height="{{ $t.Height }}" alt="{{ $s.name }}" loading="lazy">{{ end -}}
+{{- else }}<span class="supporter-name">{{ $s.name }}</span>{{ end -}}
+{{- with $s.note }}<span class="supporter-note">{{ . }}</span>{{ end -}}

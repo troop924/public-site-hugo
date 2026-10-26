@@ -1,0 +1,20 @@
+{{- /* The chartering organization and supporting businesses from data/supporters.yaml.
+     Logos are in assets/images/supporters/. */ -}}
+{{- with hugo.Data.supporters }}
+<section class="section" id="supporters" aria-labelledby="sup-h">
+  <div class="section-head">
+    <div><p class="eyebrow">Our community</p><h2 id="sup-h">Thank you to our supporters</h2></div>
+  </div>
+  {{- with .charter }}
+  <a class="supporter supporter-charter" href="{{ .url }}">{{ partial "supporter-logo.html" (dict "s" . "size" "800x200") }}</a>
+  {{- end }}
+  {{- with .businesses }}
+  <p class="supporters-lede">Local businesses that host our popcorn sales and support the troop. Please thank them with your business.</p>
+  <ul class="supporters">
+    {{- range . }}
+    <li><a class="supporter" href="{{ .url }}">{{ partial "supporter-logo.html" (dict "s" . "size" "480x200") }}</a></li>
+    {{- end }}
+  </ul>
+  {{- end }}
+</section>
+{{- end }}

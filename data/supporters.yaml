@@ -1,0 +1,22 @@
+# Shown on the home page under "Thank you to our supporters".
+#
+# charter:     the troop's chartering organization, shown first and larger.
+# businesses:  local businesses that support the troop, e.g. by hosting popcorn site sales, in this order.
+#
+#   name:  the name (shown when there's no logo, and as the logo's alt text)
+#   url:   their website
+#   logo:  optional; a file in assets/images/supporters/ (PNG, JPG, WebP or SVG),
+#          ideally a wide logo on a transparent or white background
+#   note:  optional; a few words shown under the logo, e.g. "Popcorn sales"
+
+charter:
+  name: Northminster Presbyterian Church
+  url: https://www.northminpres.org
+  logo: northminster.png
+  note: Our chartering organization and meeting home
+
+businesses:
+  - name: Backlot Coffee
+    url: https://backlotcoffee.com
+    logo: backlot-coffee.png
+    note: Popcorn sales
