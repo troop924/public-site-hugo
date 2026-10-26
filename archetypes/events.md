@@ -2,11 +2,16 @@
 # Make a new event with:  hugo new content events/2026-11-commando-campout/index.md
 # Put photos in the same folder after the trip. They become the gallery automatically.
 title: "{{ replace (replaceRE `^\d{4}-(\d{2}-)?` "" .File.ContentBaseName) "-" " " | title }}"
-date: {{ .Date }}          # start, e.g. 2026-11-13T18:00:00-06:00
+startDate: {{ now.Format "2006-01-02" }}   # first day, e.g. 2026-11-13
+startTime: ""              # optional, e.g. "6:00 PM" (all times are Central)
 endDate:                   # last day, e.g. 2026-11-15 (leave blank for one-day events)
+endTime: ""                # optional, e.g. "1:00 PM"
 category: Campout          # Campout, Service, High adventure, Summer camp, Court of Honor…
-location: ""
+locationName: ""           # short name, shown in the page header, e.g. "Camp Sol R Crown"
+locationAddress: |         # optional; one line per row below, each indented two spaces
+
 mapUrl: ""
+calendarUrl: ""      # optional: "copy to my calendar" link from the event in Google Calendar
 cost: ""
 depart: ""
 return: ""

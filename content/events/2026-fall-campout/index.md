@@ -2,10 +2,14 @@
 # SAMPLE EVENT: shows how an upcoming trip is written. Drafts only appear with `hugo server -D`.
 draft: true
 title: Fall Campout
-date: 2026-10-16T18:00:00-05:00
+startDate: 2026-10-16
+startTime: "6:00 PM"
 endDate: 2026-10-18
 category: Campout
-location: "[Campground], [Town]"
+locationName: "[Campground]"
+locationAddress: |
+  [Street address]
+  [Town], [State] [ZIP]
 cost: "[$XX]"
 depart: "Fri [time], Northminster parking lot"
 return: "Sun [time], same place"

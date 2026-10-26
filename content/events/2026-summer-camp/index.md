@@ -3,10 +3,11 @@
 # this folder. The page switches from "Before you go" to the report and a photo gallery.
 draft: true
 title: A week at Ma-Ka-Ja-Wan
-date: 2026-07-12
+startDate: 2026-07-12
 endDate: 2026-07-18
 category: Summer camp
-location: Ma-Ka-Ja-Wan Scout Reservation, Wisconsin
+locationName: Ma-Ka-Ja-Wan Scout Reservation
+locationAddress: Wisconsin
 author: "[Scout scribe]"
 description: "[One or two sentences for the card on the home page.]"
 ---

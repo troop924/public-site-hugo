@@ -2,7 +2,7 @@
 {{ define "headafter" }}
 <p class="meta">
   <span>{{ partial "when.html" . }}</span>
-  {{ with .Params.location }}<span>{{ . }}</span>{{ end }}
+  {{ with .Params.locationName }}<span>{{ . }}</span>{{ end }}
   {{ with .Params.cost }}<span>{{ . }}</span>{{ end }}
 </p>
 {{ end }}
@@ -46,11 +46,20 @@
         <dt>When</dt><dd>{{ partial "when.html" . }}</dd>
         {{ with .Params.depart }}<dt>Leave</dt><dd>{{ . }}</dd>{{ end }}
         {{ with .Params.return }}<dt>Return</dt><dd>{{ . }}</dd>{{ end }}
-        {{ with .Params.location }}<dt>Where</dt><dd>{{ with $.Params.mapUrl }}<a href="{{ . }}">{{ end }}{{ . }}{{ with $.Params.mapUrl }}</a>{{ end }}</dd>{{ end }}
+        {{- $name := .Params.locationName }}{{ $addr := strings.TrimSpace (.Params.locationAddress | default "") }}
+        {{- if or $name $addr }}
+        <dt>Where</dt><dd>
+          {{- with $name }}{{ with $.Params.mapUrl }}<a href="{{ . }}">{{ end }}{{ . }}{{ with $.Params.mapUrl }}</a>{{ end }}{{ end }}
+          {{- with $addr }}<span class="address">{{ if and $.Params.mapUrl (not $name) }}<a href="{{ $.Params.mapUrl }}">{{ . }}</a>{{ else }}{{ . }}{{ end }}</span>{{ end -}}
+        </dd>
+        {{- end }}
         {{ with .Params.cost }}<dt>Cost</dt><dd>{{ . }}</dd>{{ end }}
         {{ with .Params.uniform }}<dt>Uniform</dt><dd>{{ . }}</dd>{{ end }}
         {{ with .Params.contact }}<dt>Contact</dt><dd>{{ . }}</dd>{{ end }}
       </dl>
+      {{- if not $isPast }}{{ with .Params.calendarUrl }}
+      <a class="btn btn-ghost" href="{{ . }}">Add to my calendar</a>
+      {{- end }}{{ end }}
     </section>
     {{- with .Params.packing }}
     <section class="panel" aria-labelledby="pack-h">
