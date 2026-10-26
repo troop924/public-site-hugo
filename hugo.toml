@@ -1,5 +1,4 @@
 baseURL = "https://www.troop924.org/"
-languageCode = "en-us"
 title = "Troop 924 · Evanston"
 theme = "beacon"
 timeZone = "America/Chicago"
@@ -37,6 +36,15 @@ disableKinds = ["taxonomy", "term"]
   [params.social]
     facebook = ""
     instagram = ""
+
+[languages]
+  [languages.en]
+    direction = ''
+    disabled = false
+    label = 'English'
+    locale = 'en-US'
+    title = ''
+    weight = 0
 
 [menus]
   [[menus.main]]
