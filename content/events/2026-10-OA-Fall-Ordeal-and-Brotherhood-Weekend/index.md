@@ -2,9 +2,9 @@
 # Make a new event with:  hugo new content events/2026-11-commando-campout/index.md
 # Put photos in the same folder after the trip. They become the gallery automatically.
 title: "OA Fall Ordeal and Brotherhood Weekend"
-startDate: 2026-10-25   # first day, e.g. 2026-11-13
+startDate: 2026-10-24   # first day, e.g. 2026-11-13
 startTime: "6 PM"              # optional, e.g. "6:00 PM" (all times are Central)
-endDate: 2026-10-26        # last day, e.g. 2026-11-15 (leave blank for one-day events)
+endDate: 2026-10-25        # last day, e.g. 2026-11-15 (leave blank for one-day events)
 endTime: "9 PM"                # optional, e.g. "1:00 PM"
 category: Campout          # Campout, Service, High adventure, Summer camp, Court of Honor…
 locationName: "Camp Sol R Crown"           # short name, shown in the page header, e.g. "Camp Sol R Crown"
