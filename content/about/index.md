@@ -1,12 +1,12 @@
 ---
 title: About Troop 924
-description: One of Evanston's oldest troops, meeting at Northminster Presbyterian Church since 1926.
+description: One of Evanston's oldest troops, meeting at Northminster Presbyterian Church since 1929.
 aliases: ["/about.html"]
 ---
 
 ## History
 
-Scouts BSA Troop 924 is one of the oldest and most respected troops in Evanston. The Troop was chartered in 1926 and has been meeting at Northminster Presbyterian Church ever since. Through the years, many of the Troop's members and leaders have also been members of Northminster, which has created a strong relationship between the Church and the Troop.
+Scouts BSA Troop 924 is one of the oldest and most respected troops in Evanston. The Troop was chartered in 1929 and has been meeting at Northminster Presbyterian Church ever since. Through the years, many of the Troop's members and leaders have also been members of Northminster, which has created a strong relationship between the Church and the Troop.
 
 By maintaining a high level of training and participation, Troop 924 has consistently had outstanding youth and adult leadership; its Scouts and Scouters have risen to become leaders in our schools and our community. We are proud that during nearly 90 years of operation, nearly 100 youths have earned the Eagle Scout rank, Scouting's highest rank.
 

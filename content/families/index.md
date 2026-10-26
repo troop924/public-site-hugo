@@ -22,10 +22,18 @@ Uniforms can be bought at the NEIC Scout Store in Vernon Hills or at the [offici
 
 ## Summer camp
 
-Use the [Ma-Ka-Ja-Wan Merit Badge Planner](/makajawan-planner/) to help your Scout pick merit badges and build a camp schedule.
+The troop goes to [Ma-Ka-Ja-Wan Scout Reservation](https://www.makajawan.com) in northern Wisconsin. Use the
+[Ma-Ka-Ja-Wan Merit Badge Planner](/makajawan-planner/) to help your Scout pick merit badges and build a camp schedule.
 
 ## Getting started
 
 - [New Family Orientation](/NewFamilyOrientation.pdf) (PDF)
 - [Scouts BSA Parent Guide](/BoyScoutParentGuide.pdf) (PDF)
 - [All troop forms](/forms/)
+
+## Helpful links
+
+- [Scoutbook advancement](https://advancements.scouting.org/login?redirectTo=https%3A%2F%2Fadvancements.scouting.org%2F): track your Scout's ranks, merit badges and awards
+- [Merit badges](https://www.scouting.org/skills/merit-badges/): every badge and its requirements, from Scouting America
+- [Ma-Ka-Ja-Wan Scout Reservation](https://www.makajawan.com): our summer camp
+- [Camp Sol R. Crown](https://campcrown.org): the council camp in Trevor, Wisconsin

@@ -18,7 +18,7 @@ disableKinds = ["taxonomy", "term"]
   unsafe = true   # lets imported legacy HTML pass through until it's cleaned up
 
 [params]
-  tagline = "Scouting in Evanston since 1926"
+  tagline = "Scouting in Evanston since 1929"
   description = "Troop 924 is a Scout-led troop for youth ages 11–17, meeting Tuesday nights at Northminster Presbyterian Church in Evanston, Illinois."
   email = "scoutmaster@troop924.org"
   # The troop's existing Google Calendar stays the master calendar.
