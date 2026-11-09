@@ -1,6 +1,7 @@
-{{- /* Renders upcoming rows from calendar.html: events as full rows, meetings as light rows. */ -}}
+{{- /* Renders upcoming rows from calendar.html: events as full rows, meetings as light rows,
+     and rows marked "compact" (committee items in the home page's All tab) as one-line rows. */ -}}
 <ul class="event-list">
   {{- range . }}
-  {{- if .meeting }}{{ partial "meeting-row.html" . }}{{ else }}{{ partial "event-row.html" .page }}{{ end }}
+  {{- if .compact }}{{ partial "compact-row.html" . }}{{ else if .meeting }}{{ partial "meeting-row.html" . }}{{ else }}{{ partial "event-row.html" .page }}{{ end }}
   {{- end }}
 </ul>

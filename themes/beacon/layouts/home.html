@@ -26,15 +26,30 @@
     <div class="section-head">
       <div><p class="eyebrow">Upcoming</p><h2 id="up-h">What's next</h2></div>
       <div class="tabs" role="tablist" aria-label="Calendars" hidden>
-        <button type="button" role="tab" id="tab-scouts" aria-controls="panel-scouts" aria-selected="true">Scouts</button>
+        <button type="button" role="tab" id="tab-all" aria-controls="panel-all" aria-selected="true">All</button>
+        <button type="button" role="tab" id="tab-scouts" aria-controls="panel-scouts" aria-selected="false" tabindex="-1">Scouts</button>
         <button type="button" role="tab" id="tab-committee" aria-controls="panel-committee" aria-selected="false" tabindex="-1">Committee</button>
       </div>
     </div>
-    <div class="tab-panel" role="tabpanel" id="panel-scouts" aria-labelledby="tab-scouts">
-      {{ partial "listing.html" (first (.Params.upcomingCount | default 6) $ev.upcoming) }}
+    {{- /* All: the Scouts rows, plus committee rows (as slim date-and-title lines) up to the last Scouts date shown. */}}
+    {{- $scouts := first (.Params.upcomingCount | default 6) $ev.upcoming }}
+    {{- $comRows := first 4 $com.upcoming }}
+    {{- with $scouts }}
+      {{- $lastKey := ((index (last 1 .) 0).date.Format "2006-01-02") }}
+      {{- $comRows = slice }}
+      {{- range $com.upcoming }}{{ if le (.date.Format "2006-01-02") $lastKey }}{{ $comRows = $comRows | append . }}{{ end }}{{ end }}
+    {{- end }}
+    {{- $all := $scouts }}
+    {{- range $comRows }}{{ $all = $all | append (merge . (dict "compact" true "fallbackUrl" ("committee/" | relURL))) }}{{ end }}
+    <div class="tab-panel" role="tabpanel" id="panel-all" aria-labelledby="tab-all">
+      {{- with sort $all "sort" }}{{ partial "listing.html" . }}{{ else }}<p class="empty">Nothing scheduled yet.</p>{{ end }}
       <p class="panel-foot"><a href="{{ "events/" | relURL }}">Full calendar →</a></p>
     </div>
-    <div class="tab-panel" role="tabpanel" id="panel-committee" aria-labelledby="tab-committee">
+    <div class="tab-panel" role="tabpanel" id="panel-scouts" aria-labelledby="tab-scouts" hidden>
+      {{ partial "listing.html" $scouts }}
+      <p class="panel-foot"><a href="{{ "events/" | relURL }}">Full calendar →</a></p>
+    </div>
+    <div class="tab-panel" role="tabpanel" id="panel-committee" aria-labelledby="tab-committee" hidden>
       {{- with first 4 $com.upcoming }}{{ partial "listing.html" . }}{{ else }}<p class="empty">No committee meetings scheduled.</p>{{ end }}
       <p class="panel-foot"><a href="{{ "committee/" | relURL }}">All committee meetings →</a></p>
     </div>

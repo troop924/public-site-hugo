@@ -1,4 +1,4 @@
-// Home page "What's next" tabs. Without JS both lists simply show, one after the other.
+// Home page "What's next" tabs. Without JS only the All list shows (it includes both calendars).
 (() => {
   const list = document.querySelector('.tabs[role="tablist"]');
   if (!list) return;
@@ -20,6 +20,6 @@
       if (step) { e.preventDefault(); show(tabs[(i + step + tabs.length) % tabs.length], true); }
     });
   });
-  // #committee in the address opens the Committee tab.
+  // #scouts or #committee in the address opens that tab; otherwise All.
   show(tabs.find(t => location.hash === "#" + t.id.replace("tab-", "")) || tabs[0]);
 })();

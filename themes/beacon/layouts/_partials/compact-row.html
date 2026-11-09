@@ -1,0 +1,6 @@
+{{- /* A slim one-line row: just the date and title. Used for committee items in the home page's
+     All tab, so they're visible without crowding the Scouts events. Takes a row dict from calendar.html. */ -}}
+<li class="event-row compact{{ if .cancelled }} cancelled{{ end }}">
+  <p class="compact-date"><span class="visually-hidden">{{ .date.Format "Monday, January 2" }}</span><span aria-hidden="true">{{ .date.Format "Jan 2" }}</span></p>
+  <h3><a href="{{ .url | default .fallbackUrl }}">{{ .title }}</a>{{ if .cancelled }}<span class="visually-hidden"> (cancelled)</span>{{ end }}</h3>
+</li>
